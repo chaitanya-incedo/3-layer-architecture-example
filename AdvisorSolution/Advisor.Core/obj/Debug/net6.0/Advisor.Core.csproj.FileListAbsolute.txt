@@ -1,0 +1,12 @@
+C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.Core\obj\Debug\net6.0\Advisor.Core.csproj.AssemblyReference.cache
+C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.Core\obj\Debug\net6.0\Advisor.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.Core\obj\Debug\net6.0\Advisor.Core.AssemblyInfoInputs.cache
+C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.Core\obj\Debug\net6.0\Advisor.Core.AssemblyInfo.cs
+C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.Core\obj\Debug\net6.0\Advisor.Core.csproj.CoreCompileInputs.cache
+C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.Core\bin\Debug\net6.0\Advisor.Core.deps.json
+C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.Core\bin\Debug\net6.0\Advisor.Core.dll
+C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.Core\bin\Debug\net6.0\Advisor.Core.pdb
+C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.Core\obj\Debug\net6.0\Advisor.Core.dll
+C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.Core\obj\Debug\net6.0\refint\Advisor.Core.dll
+C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.Core\obj\Debug\net6.0\Advisor.Core.pdb
+C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.Core\obj\Debug\net6.0\ref\Advisor.Core.dll

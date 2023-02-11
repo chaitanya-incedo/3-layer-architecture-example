@@ -1,0 +1,15 @@
+C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.Infrastructure\obj\Debug\net6.0\Advisor.Infrastructure.csproj.AssemblyReference.cache
+C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.Infrastructure\obj\Debug\net6.0\Advisor.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.Infrastructure\obj\Debug\net6.0\Advisor.Infrastructure.AssemblyInfoInputs.cache
+C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.Infrastructure\obj\Debug\net6.0\Advisor.Infrastructure.AssemblyInfo.cs
+C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.Infrastructure\obj\Debug\net6.0\Advisor.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.Infrastructure\bin\Debug\net6.0\Advisor.Infrastructure.deps.json
+C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.Infrastructure\bin\Debug\net6.0\Advisor.Infrastructure.dll
+C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.Infrastructure\bin\Debug\net6.0\Advisor.Infrastructure.pdb
+C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.Infrastructure\bin\Debug\net6.0\Advisor.Core.dll
+C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.Infrastructure\bin\Debug\net6.0\Advisor.Core.pdb
+C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.Infrastructure\obj\Debug\net6.0\Advisor.Infrastructure.csproj.CopyComplete
+C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.Infrastructure\obj\Debug\net6.0\Advisor.Infrastructure.dll
+C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.Infrastructure\obj\Debug\net6.0\refint\Advisor.Infrastructure.dll
+C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.Infrastructure\obj\Debug\net6.0\Advisor.Infrastructure.pdb
+C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.Infrastructure\obj\Debug\net6.0\ref\Advisor.Infrastructure.dll
