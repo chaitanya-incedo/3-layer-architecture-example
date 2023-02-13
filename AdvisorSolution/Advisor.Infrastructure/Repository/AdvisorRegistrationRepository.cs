@@ -29,6 +29,11 @@ namespace Advisor.Infrastructure.Repository
         }
         public AdvisorRegistrationDetails CreateUser(AdvisorDTO request)
         {
+            var res = _context.AdvisorDetails.FirstOrDefault(X => X.Email == request.Email);
+            if (res is not null)
+            {
+                return null;
+            }
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
             AdvisorRegistrationDetails advisor = new AdvisorRegistrationDetails();
             advisor.Address = request.Address;
@@ -86,7 +91,7 @@ namespace Advisor.Infrastructure.Repository
             List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Email,user.Email),
-                new Claim(ClaimTypes.Role, "Admin")//user.role
+                new Claim(ClaimTypes.Role, "advisor")//user.role
             };
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
