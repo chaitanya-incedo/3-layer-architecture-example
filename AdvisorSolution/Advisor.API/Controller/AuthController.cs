@@ -15,6 +15,7 @@ namespace Advisor.API.Controller
     public class AuthController : ControllerBase
     {
         private readonly IAdvisorRegistrationService _service;
+
         private readonly IHttpContextAccessor _httpContext;
 
         public AuthController( IAdvisorRegistrationService service, IHttpContextAccessor httpContext)
@@ -36,13 +37,14 @@ namespace Advisor.API.Controller
             return Ok(result);
         }
 
+        
         [HttpPost("Register")]
         public async Task<ActionResult<AdvisorRegistrationDetails>> Register(AdvisorDTO request)
         {
             var res = _service.CreateUser(request);
             if (res == null)
                 return BadRequest("User already Exists.");
-            return Ok(res);
+            return Ok("User created");
         }
 
         [HttpPost("Login")]
@@ -53,6 +55,13 @@ namespace Advisor.API.Controller
                 return BadRequest(res);
 
             return Ok(res);
+        }
+        [HttpPost("Verify")]
+        public async Task<ActionResult<string>> Verify(string token) { 
+            var res=_service.VerifyAdvisor(token);
+            if (res.Equals("Invalid Token"))
+                return Ok(res);
+            return Ok("User Verified");
         }
 
     }

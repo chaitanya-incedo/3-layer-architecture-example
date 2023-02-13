@@ -29,5 +29,10 @@ namespace Advisor.Core.Services
             var res=_repository.LoginAdvisor(request);
             return res;
         }
+
+        public string VerifyAdvisor(string token)
+        {
+            return _repository.VerifyAdvisor(token);
+        }
     }
 }

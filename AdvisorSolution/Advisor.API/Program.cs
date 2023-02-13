@@ -12,6 +12,7 @@ using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
 ConfigurationManager configuration = builder.Configuration;
 // Add services to the container.
 
@@ -26,6 +27,7 @@ builder.Services.AddDbContext<AdvisorDbContext>(
 
 builder.Services.AddScoped<IAdvisorRegistrationService, AdvisorRegistrationService>();
 builder.Services.AddScoped<IAdvisorRegistrationRepository, AdvisorRegistrationRepository>();
+
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSwaggerGen(options =>
 {

@@ -7,5 +7,6 @@ namespace Advisor.Core.Interfaces.Repositories
     {
         AdvisorRegistrationDetails CreateUser(AdvisorDTO advisor);
         string LoginAdvisor(AdvisorLoginDTO request);
+        public string VerifyAdvisor(string token);
     }
 }

@@ -29,16 +29,13 @@ namespace Advisor.Infrastructure.Repository
         }
         public AdvisorRegistrationDetails CreateUser(AdvisorDTO request)
         {
-            var res = _context.AdvisorDetails.FirstOrDefault(X => X.Email == request.Email);
-            if (res is not null)
-            {
+            if( _context.AdvisorDetails.Any(X => X.Email == request.Email))
                 return null;
-            }
+
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
             AdvisorRegistrationDetails advisor = new AdvisorRegistrationDetails();
             advisor.Address = request.Address;
-            advisor.PasswordHash = passwordHash;
-            advisor.PasswordSalt = passwordSalt;
+            
             advisor.Email = request.Email;
             advisor.Phone = request.Phone;
             advisor.Name = request.Name;
@@ -48,14 +45,20 @@ namespace Advisor.Infrastructure.Repository
             advisor.State = request.State;
             advisor.Password = request.Password;
 
+            advisor.VerfiicationTokenForReset = CreateRandomToken();
+            advisor.PasswordHash = passwordHash;
+            advisor.PasswordSalt = passwordSalt;
+
             _context.AdvisorDetails.Add(advisor);
             _context.SaveChanges();
             return advisor;
         }
-
+        public string CreateRandomToken() {
+            return Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
+        }
         public string LoginAdvisor(AdvisorLoginDTO request)
         {
-            var res=_context.AdvisorDetails.First(X => X.Email == request.Email);
+            var res=_context.AdvisorDetails.FirstOrDefault(X => X.Email == request.Email);
             if (res is null) {
                 return "Email doesn't exist.";
             }
@@ -66,6 +69,27 @@ namespace Advisor.Infrastructure.Repository
             return token;
 
         }
+
+
+
+
+        //when user forgets password we send an email to the user with the token or the url with the token that brings him here
+        public string VerifyAdvisor(string token)
+        {
+            var res = _context.AdvisorDetails.FirstOrDefault(X => X.VerfiicationTokenForReset == token);
+            if (res is null)
+            {
+                return "Invalid Token";
+            }
+            
+            res.VerifiedAt= DateTime.Now;
+            _context.SaveChanges();
+
+            return "User verified";//if this message take him to resetting password
+
+        }
+
+
 
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {

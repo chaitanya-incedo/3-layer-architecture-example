@@ -21,5 +21,9 @@ namespace Advisor.Core.Domain.Models
         public string Password { get; set; }= string.Empty;
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
+        public string? VerfiicationTokenForReset { get; set; }
+        public DateTime? VerifiedAt { get; set; }
+        public string? PasswordResetToken { get; set; }
+        public DateTime? ResetTokenExpires { get; set; }
     }
 }
