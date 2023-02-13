@@ -13,3 +13,5 @@ C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\Adviso
 C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.Infrastructure\obj\Debug\net6.0\refint\Advisor.Infrastructure.dll
 C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.Infrastructure\obj\Debug\net6.0\Advisor.Infrastructure.pdb
 C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.Infrastructure\obj\Debug\net6.0\ref\Advisor.Infrastructure.dll
+C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.Infrastructure\bin\Debug\net6.0\Advisor.Infrastructure.runtimeconfig.json
+C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.Infrastructure\obj\Debug\net6.0\Advisor.Infrastructure.genruntimeconfig.cache
