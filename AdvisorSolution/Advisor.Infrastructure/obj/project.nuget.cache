@@ -1,12 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "c9ZPITfuGhx5/35/As1bWDwZdxhJ0v8Bun8SxNc5qmnoxVCbCff73AEB0NhhihGiv7QVqFXjA/9WvYJk1ZoqYw==",
+  "dgSpecHash": "sa52swOk9rzkOZyv58SN6sEwRm2guCEJUv+2zOrEsFPbLVYCcpZd/qHfoUJAbK1//xWjyBIkm19YOiuRy7s+8A==",
   "success": true,
   "projectFilePath": "C:\\Users\\chaitanya.sharma2\\Desktop\\investment management platform\\Advisor\\AdvisorSolution\\Advisor.Infrastructure\\Advisor.Infrastructure.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\chaitanya.sharma2\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\chaitanya.sharma2\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",
     "C:\\Users\\chaitanya.sharma2\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
+    "C:\\Users\\chaitanya.sharma2\\.nuget\\packages\\microsoft.aspnetcore.http.abstractions\\2.2.0\\microsoft.aspnetcore.http.abstractions.2.2.0.nupkg.sha512",
+    "C:\\Users\\chaitanya.sharma2\\.nuget\\packages\\microsoft.aspnetcore.http.features\\2.2.0\\microsoft.aspnetcore.http.features.2.2.0.nupkg.sha512",
     "C:\\Users\\chaitanya.sharma2\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
     "C:\\Users\\chaitanya.sharma2\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
     "C:\\Users\\chaitanya.sharma2\\.nuget\\packages\\microsoft.data.sqlclient\\5.0.1\\microsoft.data.sqlclient.5.0.1.nupkg.sha512",

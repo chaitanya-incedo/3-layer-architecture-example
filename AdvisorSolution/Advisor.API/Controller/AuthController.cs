@@ -2,11 +2,8 @@
 using Advisor.Core.Domain.Models;
 using Advisor.Core.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
-using System.Security.Cryptography;
 
 namespace Advisor.API.Controller
 {
@@ -37,7 +34,6 @@ namespace Advisor.API.Controller
             return Ok(result);
         }
 
-        
         [HttpPost("Register")]
         public async Task<ActionResult<AdvisorRegistrationDetails>> Register(AdvisorDTO request)
         {
@@ -56,12 +52,22 @@ namespace Advisor.API.Controller
 
             return Ok(res);
         }
-        [HttpPost("Verify")]
-        public async Task<ActionResult<string>> Verify(string token) { 
-            var res=_service.VerifyAdvisor(token);
-            if (res.Equals("Invalid Token"))
-                return Ok(res);
-            return Ok("User Verified");
+
+        [HttpPost("Forgot-password"), Authorize(Roles = "advisor")]
+        public async Task<ActionResult<string>> ForgotPassword(string email) {
+            var res = _service.ForgotPassword(email);
+            if (res.Equals("Bad Request."))
+                return BadRequest(res);
+            //send an email to the user with the password reset token
+            return Ok(res);
+        }
+
+        [HttpPost("Reset-password/{token}"), Authorize(Roles = "advisor")]
+        public async Task<ActionResult<string>> ResetPassword(PasswordResetDTO reset) {
+            var res = _service.ResetPassword(reset);
+            if(res.Equals("Session expired."))
+                return BadRequest(res);
+            return Ok(res);
         }
 
     }

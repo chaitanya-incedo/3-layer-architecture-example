@@ -24,15 +24,21 @@ namespace Advisor.Core.Services
             return res;
         }
 
+        public string ForgotPassword(string email)
+        {
+            var res = _repository.ForgotPassword(email);
+            return res;
+        }
+
         public string LoginAdvisor(AdvisorLoginDTO request)
         {
             var res=_repository.LoginAdvisor(request);
             return res;
         }
 
-        public string VerifyAdvisor(string token)
+        public string ResetPassword(PasswordResetDTO reset)
         {
-            return _repository.VerifyAdvisor(token);
+            return _repository.ResetPassword(reset);
         }
     }
 }

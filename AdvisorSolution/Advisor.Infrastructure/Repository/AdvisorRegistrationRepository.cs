@@ -6,15 +6,9 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using Advisor.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore.Query.Internal;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using Azure.Core;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Http;
+using Azure.Core;
 
 namespace Advisor.Infrastructure.Repository
 {
@@ -22,10 +16,12 @@ namespace Advisor.Infrastructure.Repository
     {
         private readonly AdvisorDbContext _context;
         private readonly IConfiguration _configuration;
-        public AdvisorRegistrationRepository(IConfiguration configuration, AdvisorDbContext context)
+        private readonly IHttpContextAccessor _httpContext;
+        public AdvisorRegistrationRepository(IConfiguration configuration, AdvisorDbContext context, IHttpContextAccessor httpContext)
         {
             _configuration = configuration;
             _context =context;
+            _httpContext = httpContext;
         }
         public AdvisorRegistrationDetails CreateUser(AdvisorDTO request)
         {
@@ -35,7 +31,6 @@ namespace Advisor.Infrastructure.Repository
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
             AdvisorRegistrationDetails advisor = new AdvisorRegistrationDetails();
             advisor.Address = request.Address;
-            
             advisor.Email = request.Email;
             advisor.Phone = request.Phone;
             advisor.Name = request.Name;
@@ -44,11 +39,8 @@ namespace Advisor.Infrastructure.Repository
             advisor.City = request.City;
             advisor.State = request.State;
             advisor.Password = request.Password;
-
-            advisor.VerfiicationTokenForReset = CreateRandomToken();
             advisor.PasswordHash = passwordHash;
             advisor.PasswordSalt = passwordSalt;
-
             _context.AdvisorDetails.Add(advisor);
             _context.SaveChanges();
             return advisor;
@@ -70,26 +62,41 @@ namespace Advisor.Infrastructure.Repository
 
         }
 
-
-
-
-        //when user forgets password we send an email to the user with the token or the url with the token that brings him here
-        public string VerifyAdvisor(string token)
+        public string ForgotPassword(string email)
         {
-            var res = _context.AdvisorDetails.FirstOrDefault(X => X.VerfiicationTokenForReset == token);
-            if (res is null)
+            var user = _context.AdvisorDetails.FirstOrDefault(x => x.Email == email);
+            if (user is null)
             {
-                return "Invalid Token";
+                return "Bad Request.";
             }
-            
-            res.VerifiedAt= DateTime.Now;
+            user.PasswordResetToken = CreateRandomToken();
+            user.ResetTokenExpires=DateTime.Now.AddDays(1);
             _context.SaveChanges();
-
-            return "User verified";//if this message take him to resetting password
+            //on clicking forgot password then the page will redirect to a form the form should be submitted with in one day else the token will expire and when they click submit
+            //in the post request the datetime of the request should be included
+            return user.PasswordResetToken;
 
         }
 
+        public string ResetPassword(PasswordResetDTO reset)
+        {
+            var email = _httpContext.HttpContext.User.FindFirst(ClaimTypes.Email).ToString();
+            
+            string[] words = email.Split(' ');
+            email = words[1];
+ 
+            var user = _context.AdvisorDetails.FirstOrDefault(x => x.Email == email);
+            if (reset.now > user.ResetTokenExpires) {
+                return "Session expired.";
+            }
+            user.Password= reset.Password;
+            CreatePasswordHash(reset.Password, out byte[] passwordHash, out byte[] passwordSalt);
+            user.PasswordSalt=passwordSalt;
+            user.PasswordHash=passwordHash;
+            _context.SaveChanges();
 
+            return "Password updated.";
+        }
 
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
@@ -108,7 +115,6 @@ namespace Advisor.Infrastructure.Repository
                 return computedHash.SequenceEqual(passwordHash);
             }
         }
-
 
         private string CreateToken(AdvisorRegistrationDetails user)
         {
