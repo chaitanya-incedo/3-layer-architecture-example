@@ -1,6 +1,5 @@
 ﻿using Advisor.Core.Domain;
 using Advisor.Core.Domain.DTOs;
-using Advisor.Core.Domain.Models;
 using Advisor.Core.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -35,14 +34,26 @@ namespace Advisor.API.Controller
             return Ok(result);
         }
 
+        [HttpGet("Advisor-Info"), Authorize(Roles = "advisor")]
+        public async Task<ActionResult<AdvisorInfoDTO?>> GetAdvisorInfo()
+        {
 
+            var result=string.Empty; 
+            if (_httpContext.HttpContext != null)
+            {
+                result = _httpContext.HttpContext.User.FindFirstValue(ClaimTypes.Email);
+            }
 
+            AdvisorInfoDTO res = await _service.GetAdvisorInfo(result);
+            if (res is null)
+                return NoContent();
+            return Ok(res);
+        }
 
-
-
-
-
-
+        [HttpGet("Advisors-Info"), Authorize(Roles = "advisor")]
+        public async Task<ActionResult<List<AdvisorInfoDTO>>> GetAllAdvisors() { 
+            return Ok(await _service.GetAllAdvisors());
+        }
 
         [HttpPost("Register")]
         public async Task<ActionResult<AdvisorRegisterDTO>> Register(AdvisorRegisterDTO request)
@@ -86,7 +97,6 @@ namespace Advisor.API.Controller
             return Ok(res);
         }
 
-
         /*[HttpPost("Reset-password/{token}")]*/
         [HttpPost("Reset-password-without-login")]
         /*public async Task<ActionResult<string>> ResetPassword(PasswordResetDTO reset, string token){*/
@@ -95,6 +105,29 @@ namespace Advisor.API.Controller
             var res = await _service.ForgotPassword(reset);
             if (res.Equals("Session expired."))
                 return BadRequest(res);
+            return Ok(res);
+        }
+
+        [HttpPut("Update-advisor"), Authorize(Roles = "advisor")]
+        public async Task<ActionResult<AdvisorInfoDTO>> UpdateAdvisor(AdvisorInfoDTO info) {
+            var result = string.Empty;
+            if (_httpContext.HttpContext != null)
+            {
+                result = _httpContext.HttpContext.User.FindFirstValue(ClaimTypes.Email);
+            }
+            AdvisorInfoDTO res = await _service.UpdateAdvisor(result,info);
+            if (res is null)
+                return NoContent();
+            return Ok(res);
+        }
+        [HttpDelete("Delete-advisor"), Authorize(Roles = "advisor")]
+        public async Task<ActionResult<List<AdvisorInfoDTO>>> DeleteUser() {
+            var result = string.Empty;
+            if (_httpContext.HttpContext != null)
+            {
+                result = _httpContext.HttpContext.User.FindFirstValue(ClaimTypes.Email);
+            }
+            var res=await _service.DeleteUser(result);
             return Ok(res);
         }
 

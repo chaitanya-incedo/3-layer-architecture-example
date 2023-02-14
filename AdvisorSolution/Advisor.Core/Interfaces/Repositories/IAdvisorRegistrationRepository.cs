@@ -11,12 +11,10 @@ namespace Advisor.Core.Interfaces.Repositories
         string ChangePasswordAdv(string email);
         string ResetPasswordAdvAfterLogin(PasswordResetDTO request,string email);
         string ForgotPassword(PasswordResetWithoutLoginDTO request);
-
-/*        Task<AdvisorInfoToReturn?> GetAdvisorById(int id);
-        Task<List<AdvisorInfoToReturn>?> GetAllAdvisors();
-
-        Task<AdvisorInfoToReturn?> UpdateAdvisor(int id, AdvisorInfoToReturn advisor);
-        Task<List<AdvisorInfo>?> DeleteAdvisor(int id);*/
+        AdvisorInfoDTO? GetAdvisorInfo(string email);
+        List<AdvisorInfoDTO> GetAllAdvisors();
+        AdvisorInfoDTO UpdateAdvisor(string email, AdvisorInfoDTO info);
+        List<AdvisorInfoDTO> DeleteUser(string email);
 
     }
 }

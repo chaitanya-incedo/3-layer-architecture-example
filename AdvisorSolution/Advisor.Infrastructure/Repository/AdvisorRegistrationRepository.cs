@@ -7,10 +7,7 @@ using System.Security.Cryptography;
 using Advisor.Infrastructure.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http;
-using Azure.Core;
 using Advisor.Core.Domain.DTOs;
-using System.Runtime.Intrinsics.Arm;
-using System;
 using Advisor.Core.Domain;
 
 namespace Advisor.Infrastructure.Repository
@@ -65,6 +62,8 @@ namespace Advisor.Infrastructure.Repository
             _context.SaveChanges();
             return request;
         }
+
+
                                                     private string CreateAdvisorId()
                                                     {
                                                         const string chars = "a1bc2de3fg5h6i7j4k8l9mn0opqrstuvwxyz";
@@ -92,6 +91,7 @@ namespace Advisor.Infrastructure.Repository
                                                             passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
                                                         }
                                                     }
+
         
         public string LoginAdvisor(AdvisorLoginDTO request)
         {
@@ -135,13 +135,9 @@ namespace Advisor.Infrastructure.Repository
                                                         return jwt;
                                                     }
 
+
         public string ChangePasswordAdv(string email)
         {
-            
-    
-
-            
-
             var user = _context.Users.FirstOrDefault(x => x.Email == email);
             if (user is null)
             {
@@ -153,12 +149,10 @@ namespace Advisor.Infrastructure.Repository
             //on clicking change password then the page will redirect to a form the form should be submitted with in one day else the token will expire and when they click submit
             //in the post request the datetime of the request should be included
             return user.PasswordResetToken;
-
         }
 
         public string ResetPasswordAdvAfterLogin(PasswordResetDTO reset,string email)
         {
-            
             var user = _context.Users.FirstOrDefault(x => x.Email == email);
             if (reset.now > user.ResetTokenExpires)
                 return "Session expired.";
@@ -186,6 +180,70 @@ namespace Advisor.Infrastructure.Repository
             //in the post request the datetime of the request should be included
             return user.PasswordResetToken;
             //iske baad call after login wala
+        }
+
+        public AdvisorInfoDTO? GetAdvisorInfo(string email)
+        {
+            var user = _context.Users.FirstOrDefault(x => x.Email == email);
+            if (user is null)
+                return null;
+            AdvisorInfoDTO advisorInfo = new AdvisorInfoDTO();
+            advisorInfo.Email = email;
+            advisorInfo.LastName= user.LastName;
+            advisorInfo.FirstName= user.FirstName;
+            advisorInfo.AdvisorID = user.AdvisorID;
+            advisorInfo.Address = user.Address;
+            advisorInfo.City = user.City;
+            advisorInfo.Company = user.Company;
+            advisorInfo.Phone = user.Phone;
+            advisorInfo.State = user.State;
+            return advisorInfo;
+        }
+
+        public  List<AdvisorInfoDTO> GetAllAdvisors()
+        {
+            List<AdvisorInfoDTO> users= new List<AdvisorInfoDTO>();
+
+            foreach (var user in _context.Users) {
+                AdvisorInfoDTO advisorInfo = new AdvisorInfoDTO();
+                advisorInfo.Email = user.Email;
+                advisorInfo.LastName = user.LastName;
+                advisorInfo.FirstName = user.FirstName;
+                advisorInfo.AdvisorID = user.AdvisorID;
+                advisorInfo.Address = user.Address;
+                advisorInfo.City = user.City;
+                advisorInfo.Company = user.Company;
+                advisorInfo.Phone = user.Phone;
+                advisorInfo.State = user.State;
+                users.Add(advisorInfo);
+            }
+
+            return users;
+        }
+
+        public AdvisorInfoDTO UpdateAdvisor(string email, AdvisorInfoDTO advisorInfo)
+        {
+            var user = _context.Users.FirstOrDefault(x => x.Email == email);
+            user.Email = advisorInfo.Email;
+            user.LastName = advisorInfo.LastName;
+            user.FirstName = advisorInfo.FirstName;
+            user.AdvisorID = advisorInfo.AdvisorID;
+            user.Address = advisorInfo.Address;
+            user.City = advisorInfo.City;
+            user.Company = advisorInfo.Company;
+            user.Phone = advisorInfo.Phone;
+            user.State = advisorInfo.State;
+            _context.Update(user);
+            _context.SaveChanges();
+            return advisorInfo;
+        }
+
+        public List<AdvisorInfoDTO> DeleteUser(string email)
+        {
+            var user = _context.Users.FirstOrDefault(x => x.Email == email);
+            _context.Users.Remove(user);
+            _context.SaveChanges();
+            return GetAllAdvisors();
         }
     }
 }
