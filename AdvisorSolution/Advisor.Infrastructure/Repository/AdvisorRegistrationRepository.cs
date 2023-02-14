@@ -1,5 +1,4 @@
-﻿using Advisor.Core.Domain;
-using Advisor.Core.Domain.Models;
+﻿using Advisor.Core.Domain.Models;
 using Advisor.Core.Interfaces.Repositories;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -9,6 +8,10 @@ using Advisor.Infrastructure.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http;
 using Azure.Core;
+using Advisor.Core.Domain.DTOs;
+using System.Runtime.Intrinsics.Arm;
+using System;
+using Advisor.Core.Domain;
 
 namespace Advisor.Infrastructure.Repository
 {
@@ -17,43 +20,85 @@ namespace Advisor.Infrastructure.Repository
         private readonly AdvisorDbContext _context;
         private readonly IConfiguration _configuration;
         private readonly IHttpContextAccessor _httpContext;
+        private static Random random = new Random();
+
         public AdvisorRegistrationRepository(IConfiguration configuration, AdvisorDbContext context, IHttpContextAccessor httpContext)
         {
             _configuration = configuration;
             _context =context;
             _httpContext = httpContext;
         }
-        public AdvisorRegistrationDetails CreateUser(AdvisorDTO request)
+
+
+        public AdvisorRegisterDTO? CreateAdvisor(AdvisorRegisterDTO request)
         {
             if( _context.AdvisorDetails.Any(X => X.Email == request.Email))
                 return null;
 
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
-            AdvisorRegistrationDetails advisor = new AdvisorRegistrationDetails();
+
+            var advId = CreateAdvisorId();
+            Users advisor = new Users();
             advisor.Address = request.Address;
             advisor.Email = request.Email;
             advisor.Phone = request.Phone;
-            advisor.Name = request.Name;
-            advisor.AdvisroId = request.AdvisroId;
             advisor.Company = request.Company;
             advisor.City = request.City;
             advisor.State = request.State;
-            advisor.Password = request.Password;
             advisor.PasswordHash = passwordHash;
             advisor.PasswordSalt = passwordSalt;
-            _context.AdvisorDetails.Add(advisor);
+            advisor.FirstName= request.FirstName;
+            advisor.LastName= request.LastName;
+            advisor.SortName=request.LastName+", "+request.FirstName;
+            advisor.RoleID = 1;
+            advisor.AdvisorID = advId;
+            advisor.ClientID = null;
+            advisor.AgentID = null;
+            advisor.Active = 1;
+            advisor.CreatedDate = DateTime.Now;
+            advisor.ModifiedBy = advId;
+            advisor.ModifiedDate = DateTime.Now;
+            advisor.DeletedFlag = 0;
+            advisor.VerificationToken = CreateRandomToken();
+
+            _context.Users.Add(advisor);
             _context.SaveChanges();
-            return advisor;
+            return request;
         }
-        public string CreateRandomToken() {
-            return Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
-        }
+                                                    private string CreateAdvisorId()
+                                                    {
+                                                        const string chars = "a1bc2de3fg5h6i7j4k8l9mn0opqrstuvwxyz";
+                                                        var newId = new string(Enumerable.Repeat(chars, 6)
+                                                            .Select(s => s[random.Next(s.Length)]).ToArray());
+                                                        var res = _context.Users.Any(u => u.AdvisorID == newId);
+                                                        if (res == true)
+                                                        {
+                                                            CreateAdvisorId();
+                                                        }
+                                                        return newId;
+                                                    }
+
+                                                    public string CreateRandomToken() {
+                                                        var token = Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
+                                                        if (_context.Users.Any(x => x.AdvisorID == token))
+                                                            token = CreateRandomToken();
+                                                        return token;
+                                                    }
+                                                    private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+                                                    {
+                                                        using (var hmac = new HMACSHA512())
+                                                        {
+                                                            passwordSalt = hmac.Key;
+                                                            passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                                                        }
+                                                    }
+        
         public string LoginAdvisor(AdvisorLoginDTO request)
         {
-            var res=_context.AdvisorDetails.FirstOrDefault(X => X.Email == request.Email);
-            if (res is null) {
-                return "Email doesn't exist.";
-            }
+            var res=_context.Users.FirstOrDefault(X => X.Email == request.Email);
+            if (res is null) 
+                  return "Email doesn't exist.";
+               
             if (!VerifyPasswordHash(request.Password, res.PasswordHash, res.PasswordSalt))
                 return "Wrong password.";
 
@@ -62,78 +107,85 @@ namespace Advisor.Infrastructure.Repository
 
         }
 
-        public string ForgotPassword(string email)
+
+                                                    private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
+                                                    {
+                                                        using (var hmac = new HMACSHA512(passwordSalt))
+                                                        {
+                                                            var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                                                            return computedHash.SequenceEqual(passwordHash);
+                                                        }
+                                                    }
+                                                    private string CreateToken(Users user)
+                                                    {
+                                                        List<Claim> claims = new List<Claim>
+                                                                       {
+                                                                           new Claim(ClaimTypes.Email,user.Email),
+                                                                           new Claim(ClaimTypes.Role, "advisor")//user.role
+                                                                       };
+                                                        var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
+                                                        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+                                                        var token = new JwtSecurityToken(
+                                                            claims: claims,
+                                                            expires: DateTime.Now.AddDays(1),
+                                                            signingCredentials: creds);
+
+                                                        var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+                                                        return jwt;
+                                                    }
+
+        public string ChangePasswordAdv(string email)
         {
-            var user = _context.AdvisorDetails.FirstOrDefault(x => x.Email == email);
+            
+    
+
+            
+
+            var user = _context.Users.FirstOrDefault(x => x.Email == email);
             if (user is null)
             {
                 return "Bad Request.";
             }
             user.PasswordResetToken = CreateRandomToken();
-            user.ResetTokenExpires=DateTime.Now.AddDays(1);
+            user.ResetTokenExpires = DateTime.Now.AddDays(1);
             _context.SaveChanges();
-            //on clicking forgot password then the page will redirect to a form the form should be submitted with in one day else the token will expire and when they click submit
+            //on clicking change password then the page will redirect to a form the form should be submitted with in one day else the token will expire and when they click submit
             //in the post request the datetime of the request should be included
             return user.PasswordResetToken;
 
         }
 
-        public string ResetPassword(PasswordResetDTO reset)
+        public string ResetPasswordAdvAfterLogin(PasswordResetDTO reset,string email)
         {
-            var email = _httpContext.HttpContext.User.FindFirst(ClaimTypes.Email).ToString();
             
-            string[] words = email.Split(' ');
-            email = words[1];
- 
-            var user = _context.AdvisorDetails.FirstOrDefault(x => x.Email == email);
-            if (reset.now > user.ResetTokenExpires) {
+            var user = _context.Users.FirstOrDefault(x => x.Email == email);
+            if (reset.now > user.ResetTokenExpires)
                 return "Session expired.";
-            }
-            user.Password= reset.Password;
+
+            if (!reset.token.Equals(user.PasswordResetToken))
+                return "Not authorized.";
+
             CreatePasswordHash(reset.Password, out byte[] passwordHash, out byte[] passwordSalt);
-            user.PasswordSalt=passwordSalt;
-            user.PasswordHash=passwordHash;
+            user.PasswordSalt = passwordSalt;
+            user.PasswordHash = passwordHash;
             _context.SaveChanges();
 
             return "Password updated.";
         }
 
-        private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        public string ForgotPassword(PasswordResetWithoutLoginDTO request)
         {
-            using (var hmac = new HMACSHA512())
-            {
-                passwordSalt = hmac.Key;
-                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-            }
+            var user = _context.Users.FirstOrDefault(x=>x.Email == request.Email);
+            if (user is null)
+                return "No User with this email exists.";
+            user.PasswordResetToken = CreateRandomToken();
+            user.ResetTokenExpires = DateTime.Now.AddDays(1);
+            _context.SaveChanges();
+            //on clicking forgot password then the page will redirect to a form the form should be submitted with in one day else the token will expire and when they click submit
+            //in the post request the datetime of the request should be included
+            return user.PasswordResetToken;
+            //iske baad call after login wala
         }
-
-        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
-        {
-            using (var hmac = new HMACSHA512(passwordSalt))
-            {
-                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-                return computedHash.SequenceEqual(passwordHash);
-            }
-        }
-
-        private string CreateToken(AdvisorRegistrationDetails user)
-        {
-            List<Claim> claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Email,user.Email),
-                new Claim(ClaimTypes.Role, "advisor")//user.role
-            };
-            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-            var token = new JwtSecurityToken(
-                claims: claims,
-                expires: DateTime.Now.AddDays(1),
-                signingCredentials: creds);
-
-            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-
-            return jwt;
-        }
-
     }
 }

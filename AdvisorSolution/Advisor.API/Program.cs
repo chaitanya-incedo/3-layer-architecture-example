@@ -5,7 +5,6 @@ using Advisor.Infrastructure.Data;
 using Advisor.Infrastructure.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
@@ -21,9 +20,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+/*builder.Services.AddScoped<IEmailService, EmailService>();*/
+
+
 builder.Services.AddDbContext<AdvisorDbContext>(
             opt => opt.UseSqlServer(configuration.GetConnectionString("Capstone"),
-            b => b.MigrationsAssembly("Advisor.API")));//since we actually migrating in another assembly
+            b => b.MigrationsAssembly("Advisor.Infrastructure")));//since we actually migrating in another assembly
 
 builder.Services.AddScoped<IAdvisorRegistrationService, AdvisorRegistrationService>();
 builder.Services.AddScoped<IAdvisorRegistrationRepository, AdvisorRegistrationRepository>();

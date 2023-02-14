@@ -15,5 +15,11 @@ namespace Advisor.Infrastructure.Data
 
         }
         public DbSet<AdvisorRegistrationDetails> AdvisorDetails { get; set; }
+
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<Users> Users { get; set; }
+        public DbSet<InvestorInfo> InvestorInfos { get; set; }
+        public DbSet<InvestmentType> InvestmentTypes { get; set; }
+        public DbSet<InvestmentStrategy> InvestmentStrategies { get; set; }
     }
 }

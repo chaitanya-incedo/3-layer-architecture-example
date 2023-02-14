@@ -9,6 +9,7 @@ namespace Advisor.Core.Domain
     public class PasswordResetDTO
     {
         public DateTime now { get; set; }=DateTime.Now;
-        public string Password { get; set; }
+        public string token { get; set; } = null!;
+        public string Password { get; set; } = null!;
     }
 }

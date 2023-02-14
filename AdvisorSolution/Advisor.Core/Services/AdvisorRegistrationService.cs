@@ -1,4 +1,5 @@
 ﻿using Advisor.Core.Domain;
+using Advisor.Core.Domain.DTOs;
 using Advisor.Core.Domain.Models;
 using Advisor.Core.Interfaces.Repositories;
 using Advisor.Core.Interfaces.Services;
@@ -6,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Advisor.Core.Services
@@ -18,27 +20,35 @@ namespace Advisor.Core.Services
         {
             _repository= repository;
         }
-        public AdvisorRegistrationDetails CreateUser(AdvisorDTO advisor)
+
+
+        public Task<AdvisorRegisterDTO?> CreateAdvisor(AdvisorRegisterDTO request)
         {
-            var res=_repository.CreateUser(advisor);
-            return res;
+            var res=_repository.CreateAdvisor(request);
+
+            return Task.FromResult(res);
         }
 
-        public string ForgotPassword(string email)
+        public Task<string> LoginAdvisor(AdvisorLoginDTO request)
         {
-            var res = _repository.ForgotPassword(email);
-            return res;
+            var res = _repository.LoginAdvisor(request);
+            return Task.FromResult(res);
         }
 
-        public string LoginAdvisor(AdvisorLoginDTO request)
+        public Task<string> ChangePassword(string email)
         {
-            var res=_repository.LoginAdvisor(request);
-            return res;
+            var res = _repository.ChangePasswordAdv(email);
+            return Task.FromResult(res);
         }
 
-        public string ResetPassword(PasswordResetDTO reset)
+        public Task<string> ResetPassword(PasswordResetDTO reset,string email)
         {
-            return _repository.ResetPassword(reset);
+            return Task.FromResult(_repository.ResetPasswordAdvAfterLogin(reset,email));
+        }
+
+        public Task<string> ForgotPassword(PasswordResetWithoutLoginDTO request)
+        {
+            return Task.FromResult(_repository.ForgotPassword(request));
         }
     }
 }

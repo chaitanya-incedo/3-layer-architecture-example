@@ -1,4 +1,5 @@
 ﻿using Advisor.Core.Domain;
+using Advisor.Core.Domain.DTOs;
 using Advisor.Core.Domain.Models;
 using Advisor.Core.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -34,10 +35,19 @@ namespace Advisor.API.Controller
             return Ok(result);
         }
 
+
+
+
+
+
+
+
+
+
         [HttpPost("Register")]
-        public async Task<ActionResult<AdvisorRegistrationDetails>> Register(AdvisorDTO request)
+        public async Task<ActionResult<AdvisorRegisterDTO>> Register(AdvisorRegisterDTO request)
         {
-            var res = _service.CreateUser(request);
+            var res =await _service.CreateAdvisor(request);
             if (res == null)
                 return BadRequest("User already Exists.");
             return Ok("User created");
@@ -46,26 +56,44 @@ namespace Advisor.API.Controller
         [HttpPost("Login")]
         public async Task<ActionResult<string>> Login(AdvisorLoginDTO request)
         {
-            var res = _service.LoginAdvisor(request);
+            var res = await _service.LoginAdvisor(request);
             if (res.Equals("Email doesn't exist.") || res.Equals("Wrong password."))
                 return BadRequest(res);
 
             return Ok(res);
         }
 
-        [HttpPost("Forgot-password"), Authorize(Roles = "advisor")]
-        public async Task<ActionResult<string>> ForgotPassword(string email) {
-            var res = _service.ForgotPassword(email);
+        [HttpPost("change-password"),  Authorize(Roles = "advisor")]
+        public async Task<ActionResult<string>> ChangePassword()
+        {
+            var email = _httpContext.HttpContext.User.FindFirstValue(ClaimTypes.Email);
+
+            var res = await _service.ChangePassword(email);
             if (res.Equals("Bad Request."))
                 return BadRequest(res);
             //send an email to the user with the password reset token
             return Ok(res);
         }
 
-        [HttpPost("Reset-password/{token}"), Authorize(Roles = "advisor")]
-        public async Task<ActionResult<string>> ResetPassword(PasswordResetDTO reset) {
-            var res = _service.ResetPassword(reset);
+        /*[HttpPost("Reset-password/{token}")]*/
+        [HttpPost("Reset-password-after-login"), Authorize(Roles = "advisor")]
+        /*public async Task<ActionResult<string>> ResetPassword(PasswordResetDTO reset, string token){*/
+        public async Task<ActionResult<string>> ResetPasswordLogin(PasswordResetDTO reset) {
+            var email = _httpContext.HttpContext.User.FindFirstValue(ClaimTypes.Email);
+            var res = await _service.ResetPassword(reset, email);
             if(res.Equals("Session expired."))
+                return BadRequest(res);
+            return Ok(res);
+        }
+
+
+        /*[HttpPost("Reset-password/{token}")]*/
+        [HttpPost("Reset-password-without-login")]
+        /*public async Task<ActionResult<string>> ResetPassword(PasswordResetDTO reset, string token){*/
+        public async Task<ActionResult<string>> ResetPassword(PasswordResetWithoutLoginDTO reset)
+        {
+            var res = await _service.ForgotPassword(reset);
+            if (res.Equals("Session expired."))
                 return BadRequest(res);
             return Ok(res);
         }
