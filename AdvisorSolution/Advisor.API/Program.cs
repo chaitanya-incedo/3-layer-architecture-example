@@ -4,6 +4,7 @@ using Advisor.Core.Services;
 using Advisor.Infrastructure.Data;
 using Advisor.Infrastructure.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -19,6 +20,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddCors(p => p.AddPolicy("CorsPolicy", build => {
+    build.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+}));
 
 /*builder.Services.AddScoped<IEmailService, EmailService>();*/
 
@@ -62,6 +66,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseCors("CorsPolicy");
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
