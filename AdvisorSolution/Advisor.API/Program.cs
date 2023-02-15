@@ -20,9 +20,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddCors(p => p.AddPolicy("CorsPolicy", build => {
-    build.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-}));
+
 
 /*builder.Services.AddScoped<IEmailService, EmailService>();*/
 
@@ -58,6 +56,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     };
 });
 
+builder.Services.AddCors(p => p.AddPolicy("CorsPolicy", build => {
+    build.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+}));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -66,10 +68,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseCors("CorsPolicy");
 
 app.UseHttpsRedirection();
+
+app.UseCors("CorsPolicy");
+
 app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllers();
