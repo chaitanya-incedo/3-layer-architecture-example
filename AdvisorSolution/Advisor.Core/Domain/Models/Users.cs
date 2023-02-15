@@ -1,6 +1,7 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.RegularExpressions;
 
 namespace Advisor.Core.Domain.Models
 {
@@ -103,5 +104,8 @@ namespace Advisor.Core.Domain.Models
         public DateTime? ResetTokenExpires { get; set; }
 
         public List<InvestorInfo>? investorInfos { get; set; }
+
+        public virtual List<AdvisorClient> AdvisorsList { get; set; }
+        public virtual List<AdvisorClient> ClientList { get; set; }
     }
 }

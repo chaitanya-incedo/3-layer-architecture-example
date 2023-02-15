@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Advisor.Infrastructure.Migrations
 {
     [DbContext(typeof(AdvisorDbContext))]
-    [Migration("20230214172851_PossiblyIncorrectModels")]
-    partial class PossiblyIncorrectModels
+    [Migration("20230215105329_try")]
+    partial class @try
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,29 @@ namespace Advisor.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Advisor.Core.Domain.Models.AdvisorClient", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<int>("AdvisorID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ClientID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("AdvisorID");
+
+                    b.HasIndex("ClientID");
+
+                    b.ToTable("AdvisorClients");
+                });
 
             modelBuilder.Entity("Advisor.Core.Domain.Models.AdvisorRegistrationDetails", b =>
                 {
@@ -331,6 +354,25 @@ namespace Advisor.Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Advisor.Core.Domain.Models.AdvisorClient", b =>
+                {
+                    b.HasOne("Advisor.Core.Domain.Models.Users", "Advisor")
+                        .WithMany("AdvisorsList")
+                        .HasForeignKey("AdvisorID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Advisor.Core.Domain.Models.Users", "Client")
+                        .WithMany("ClientList")
+                        .HasForeignKey("ClientID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Advisor");
+
+                    b.Navigation("Client");
+                });
+
             modelBuilder.Entity("Advisor.Core.Domain.Models.InvestmentStrategy", b =>
                 {
                     b.HasOne("Advisor.Core.Domain.Models.InvestmentType", "InvestmentTypes")
@@ -384,6 +426,10 @@ namespace Advisor.Infrastructure.Migrations
 
             modelBuilder.Entity("Advisor.Core.Domain.Models.Users", b =>
                 {
+                    b.Navigation("AdvisorsList");
+
+                    b.Navigation("ClientList");
+
                     b.Navigation("investorInfos");
                 });
 #pragma warning restore 612, 618

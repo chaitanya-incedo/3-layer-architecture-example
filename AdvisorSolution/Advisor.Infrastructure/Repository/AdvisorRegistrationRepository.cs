@@ -22,14 +22,14 @@ namespace Advisor.Infrastructure.Repository
         public AdvisorRegistrationRepository(IConfiguration configuration, AdvisorDbContext context, IHttpContextAccessor httpContext)
         {
             _configuration = configuration;
-            _context =context;
+            _context = context;
             _httpContext = httpContext;
         }
 
 
         public AdvisorRegisterDTO? CreateAdvisor(AdvisorRegisterDTO request)
         {
-            if( _context.AdvisorDetails.Any(X => X.Email == request.Email))
+            if (_context.AdvisorDetails.Any(X => X.Email == request.Email))
                 return null;
 
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
@@ -44,9 +44,9 @@ namespace Advisor.Infrastructure.Repository
             advisor.State = request.State;
             advisor.PasswordHash = passwordHash;
             advisor.PasswordSalt = passwordSalt;
-            advisor.FirstName= request.FirstName;
-            advisor.LastName= request.LastName;
-            advisor.SortName=request.LastName+", "+request.FirstName;
+            advisor.FirstName = request.FirstName;
+            advisor.LastName = request.LastName;
+            advisor.SortName = request.LastName + ", " + request.FirstName;
             advisor.RoleID = 1;
             advisor.AdvisorID = advId;
             advisor.ClientID = null;
@@ -64,41 +64,42 @@ namespace Advisor.Infrastructure.Repository
         }
 
 
-                                                    private string CreateAdvisorId()
-                                                    {
-                                                        const string chars = "a1bc2de3fg5h6i7j4k8l9mn0opqrstuvwxyz";
-                                                        var newId = new string(Enumerable.Repeat(chars, 6)
-                                                            .Select(s => s[random.Next(s.Length)]).ToArray());
-                                                        var res = _context.Users.Any(u => u.AdvisorID == newId);
-                                                        if (res == true)
-                                                        {
-                                                            CreateAdvisorId();
-                                                        }
-                                                        return newId;
-                                                    }
+        private string CreateAdvisorId()
+        {
+            const string chars = "a1bc2de3fg5h6i7j4k8l9mn0opqrstuvwxyz";
+            var newId = new string(Enumerable.Repeat(chars, 6)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+            var res = _context.Users.Any(u => u.AdvisorID == newId);
+            if (res == true)
+            {
+                CreateAdvisorId();
+            }
+            return newId;
+        }
 
-                                                    public string CreateRandomToken() {
-                                                        var token = Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
-                                                        if (_context.Users.Any(x => x.AdvisorID == token))
-                                                            token = CreateRandomToken();
-                                                        return token;
-                                                    }
-                                                    private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
-                                                    {
-                                                        using (var hmac = new HMACSHA512())
-                                                        {
-                                                            passwordSalt = hmac.Key;
-                                                            passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-                                                        }
-                                                    }
+        public string CreateRandomToken()
+        {
+            var token = Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
+            if (_context.Users.Any(x => x.AdvisorID == token))
+                token = CreateRandomToken();
+            return token;
+        }
+        private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        {
+            using (var hmac = new HMACSHA512())
+            {
+                passwordSalt = hmac.Key;
+                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+            }
+        }
 
-        
+
         public string LoginAdvisor(AdvisorLoginDTO request)
         {
-            var res=_context.Users.FirstOrDefault(X => X.Email == request.Email);
-            if (res is null) 
-                  return "Email doesn't exist.";
-               
+            var res = _context.Users.FirstOrDefault(X => X.Email == request.Email);
+            if (res is null)
+                return "Email doesn't exist.";
+
             if (!VerifyPasswordHash(request.Password, res.PasswordHash, res.PasswordSalt))
                 return "Wrong password.";
 
@@ -108,32 +109,32 @@ namespace Advisor.Infrastructure.Repository
         }
 
 
-                                                    private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
-                                                    {
-                                                        using (var hmac = new HMACSHA512(passwordSalt))
-                                                        {
-                                                            var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-                                                            return computedHash.SequenceEqual(passwordHash);
-                                                        }
-                                                    }
-                                                    private string CreateToken(Users user)
-                                                    {
-                                                        List<Claim> claims = new List<Claim>
+        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
+        {
+            using (var hmac = new HMACSHA512(passwordSalt))
+            {
+                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                return computedHash.SequenceEqual(passwordHash);
+            }
+        }
+        private string CreateToken(Users user)
+        {
+            List<Claim> claims = new List<Claim>
                                                                        {
                                                                            new Claim(ClaimTypes.Email,user.Email),
                                                                            new Claim(ClaimTypes.Role, "advisor")//user.role
                                                                        };
-                                                        var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
-                                                        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-                                                        var token = new JwtSecurityToken(
-                                                            claims: claims,
-                                                            expires: DateTime.Now.AddDays(1),
-                                                            signingCredentials: creds);
+            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.Now.AddDays(1),
+                signingCredentials: creds);
 
-                                                        var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
-                                                        return jwt;
-                                                    }
+            return jwt;
+        }
 
 
         public string ChangePasswordAdv(string email)
@@ -151,7 +152,7 @@ namespace Advisor.Infrastructure.Repository
             return user.PasswordResetToken;
         }
 
-        public string ResetPasswordAdvAfterLogin(PasswordResetDTO reset,string email)
+        public string ResetPasswordAdvAfterLogin(PasswordResetDTO reset, string email)
         {
             var user = _context.Users.FirstOrDefault(x => x.Email == email);
             if (reset.now > user.ResetTokenExpires)
@@ -170,7 +171,7 @@ namespace Advisor.Infrastructure.Repository
 
         public string ForgotPassword(PasswordResetWithoutLoginDTO request)
         {
-            var user = _context.Users.FirstOrDefault(x=>x.Email == request.Email);
+            var user = _context.Users.FirstOrDefault(x => x.Email == request.Email);
             if (user is null)
                 return "No User with this email exists.";
             user.PasswordResetToken = CreateRandomToken();
@@ -189,8 +190,8 @@ namespace Advisor.Infrastructure.Repository
                 return null;
             AdvisorInfoDTO advisorInfo = new AdvisorInfoDTO();
             advisorInfo.Email = email;
-            advisorInfo.LastName= user.LastName;
-            advisorInfo.FirstName= user.FirstName;
+            advisorInfo.LastName = user.LastName;
+            advisorInfo.FirstName = user.FirstName;
             advisorInfo.AdvisorID = user.AdvisorID;
             advisorInfo.Address = user.Address;
             advisorInfo.City = user.City;
@@ -200,11 +201,12 @@ namespace Advisor.Infrastructure.Repository
             return advisorInfo;
         }
 
-        public  List<AdvisorInfoDTO> GetAllAdvisors()
+        public List<AdvisorInfoDTO> GetAllAdvisors()
         {
-            List<AdvisorInfoDTO> users= new List<AdvisorInfoDTO>();
+            List<AdvisorInfoDTO> users = new List<AdvisorInfoDTO>();
 
-            foreach (var user in _context.Users) {
+            foreach (var user in _context.Users)
+            {
                 AdvisorInfoDTO advisorInfo = new AdvisorInfoDTO();
                 advisorInfo.Email = user.Email;
                 advisorInfo.LastName = user.LastName;

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Advisor.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class PossiblyIncorrectModels : Migration
+    public partial class @try : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -109,6 +109,30 @@ namespace Advisor.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AdvisorClients",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AdvisorID = table.Column<int>(type: "int", nullable: false),
+                    ClientID = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AdvisorClients", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_AdvisorClients_Users_AdvisorID",
+                        column: x => x.AdvisorID,
+                        principalTable: "Users",
+                        principalColumn: "UserID");
+                    table.ForeignKey(
+                        name: "FK_AdvisorClients_Users_ClientID",
+                        column: x => x.ClientID,
+                        principalTable: "Users",
+                        principalColumn: "UserID");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "InvestorInfos",
                 columns: table => new
                 {
@@ -167,6 +191,16 @@ namespace Advisor.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_AdvisorClients_AdvisorID",
+                table: "AdvisorClients",
+                column: "AdvisorID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AdvisorClients_ClientID",
+                table: "AdvisorClients",
+                column: "ClientID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_InvestmentStrategies_InvestmentTypeID",
                 table: "InvestmentStrategies",
                 column: "InvestmentTypeID");
@@ -190,6 +224,9 @@ namespace Advisor.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "AdvisorClients");
+
             migrationBuilder.DropTable(
                 name: "AdvisorDetails");
 

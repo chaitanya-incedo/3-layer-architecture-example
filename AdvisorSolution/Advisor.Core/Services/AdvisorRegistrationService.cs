@@ -18,12 +18,12 @@ namespace Advisor.Core.Services
 
         public AdvisorRegistrationService(IAdvisorRegistrationRepository repository)
         {
-            _repository= repository;
+            _repository = repository;
         }
 
         public Task<AdvisorRegisterDTO?> CreateAdvisor(AdvisorRegisterDTO request)
         {
-            var res=_repository.CreateAdvisor(request);
+            var res = _repository.CreateAdvisor(request);
 
             return Task.FromResult(res);
         }
@@ -40,9 +40,9 @@ namespace Advisor.Core.Services
             return Task.FromResult(res);
         }
 
-        public Task<string> ResetPassword(PasswordResetDTO reset,string email)
+        public Task<string> ResetPassword(PasswordResetDTO reset, string email)
         {
-            return Task.FromResult(_repository.ResetPasswordAdvAfterLogin(reset,email));
+            return Task.FromResult(_repository.ResetPasswordAdvAfterLogin(reset, email));
         }
 
         public Task<string> ForgotPassword(PasswordResetWithoutLoginDTO request)
@@ -62,7 +62,7 @@ namespace Advisor.Core.Services
 
         public Task<AdvisorInfoDTO> UpdateAdvisor(string email, AdvisorInfoDTO info)
         {
-            return Task.FromResult(_repository.UpdateAdvisor(email,info));
+            return Task.FromResult(_repository.UpdateAdvisor(email, info));
         }
 
         public Task<List<AdvisorInfoDTO>> DeleteUser(string email)
@@ -71,5 +71,5 @@ namespace Advisor.Core.Services
         }
 
     }
-    
+
 }
