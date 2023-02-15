@@ -16,20 +16,20 @@ namespace Advisor.Infrastructure.Repository
     {
         private readonly AdvisorDbContext _context;
         private readonly IConfiguration _configuration;
-        private readonly IHttpContextAccessor _httpContext;
+        
         private static Random random = new Random();
 
         public AdvisorRegistrationRepository(IConfiguration configuration, AdvisorDbContext context, IHttpContextAccessor httpContext)
         {
             _configuration = configuration;
             _context = context;
-            _httpContext = httpContext;
+            
         }
 
 
         public AdvisorRegisterDTO? CreateAdvisor(AdvisorRegisterDTO request)
         {
-            if (_context.AdvisorDetails.Any(X => X.Email == request.Email))
+            if (_context.Users.Any(X => X.Email == request.Email))
                 return null;
 
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);

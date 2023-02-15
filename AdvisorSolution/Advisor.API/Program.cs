@@ -4,7 +4,6 @@ using Advisor.Core.Services;
 using Advisor.Infrastructure.Data;
 using Advisor.Infrastructure.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -21,9 +20,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
 /*builder.Services.AddScoped<IEmailService, EmailService>();*/
-
 
 builder.Services.AddDbContext<AdvisorDbContext>(
             opt => opt.UseSqlServer(configuration.GetConnectionString("Capstone"),
@@ -31,6 +28,9 @@ builder.Services.AddDbContext<AdvisorDbContext>(
 
 builder.Services.AddScoped<IAdvisorRegistrationService, AdvisorRegistrationService>();
 builder.Services.AddScoped<IAdvisorRegistrationRepository, AdvisorRegistrationRepository>();
+
+builder.Services.AddScoped<IInvestmentService, InvestmentService>();
+builder.Services.AddScoped<IInvestmentRepository, InvestmentRepository>();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSwaggerGen(options =>
