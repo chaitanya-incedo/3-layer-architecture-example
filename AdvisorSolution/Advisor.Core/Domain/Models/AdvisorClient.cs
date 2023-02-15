@@ -11,11 +11,9 @@ namespace Advisor.Core.Domain.Models
 
         [ForeignKey("AdvisorID")]
         public virtual Users Advisor { get; set; }
-        /*public int? AdvisorID { get; set; }*/
+
         [ForeignKey("ClientID")]
         public virtual Users Client { get; set; }
-        /*public int? ClientID { get; set; }*/
-
 
     }
 }

@@ -100,11 +100,19 @@ namespace Advisor.API.Controller
         }
 
         /*[HttpPost("Reset-password/{token}")]*/
-        [HttpPost("Reset-password-without-login")]
+        [HttpPost("Forgot-password-without-login")]
         /*public async Task<ActionResult<string>> ResetPassword(PasswordResetDTO reset, string token){*/
-        public async Task<ActionResult<string>> ResetPassword(PasswordResetWithoutLoginDTO reset)
+        public async Task<ActionResult<string>> ForgotPassword(PasswordResetWithoutLoginDTO reset)
         {
             var res = await _service.ForgotPassword(reset);
+            if (res.Equals("Session expired."))
+                return BadRequest(res);
+            return Ok(res);
+        }
+        [HttpPost("Reset-password-without-login")]
+        public async Task<ActionResult<string>> ResetPassword(PasswordResetDTO request, string email)
+        {
+            var res = await _service.ResetPassword(request,email);
             if (res.Equals("Session expired."))
                 return BadRequest(res);
             return Ok(res);
