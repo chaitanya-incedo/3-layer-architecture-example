@@ -232,7 +232,7 @@ namespace Advisor.Infrastructure.Repository
             user.AdvisorID = advisorInfo.AdvisorID;
             user.Address = advisorInfo.Address;
             user.City = advisorInfo.City;
-            user.SortName= = advisorInfo.LastName + ", " + advisorInfo.FirstName;
+            user.SortName= advisorInfo.LastName + ", " + advisorInfo.FirstName;
             user.Company = advisorInfo.Company;
             user.Phone = advisorInfo.Phone;
             user.State = advisorInfo.State;
