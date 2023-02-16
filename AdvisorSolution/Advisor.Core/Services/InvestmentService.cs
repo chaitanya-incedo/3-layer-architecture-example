@@ -1,4 +1,5 @@
 ﻿using Advisor.Core.Domain.DTOs;
+using Advisor.Core.Domain.Models;
 using Advisor.Core.Interfaces.Repositories;
 using Advisor.Core.Interfaces.Services;
 using System;
@@ -23,9 +24,10 @@ namespace Advisor.Core.Services
             return Task.FromResult(res);
         }
 
-        public Task<InvestmentDTO> GetInvestment(InvestmentDTO request)
+        public Task<List<InvestmentStrategy>?> GetInvestment(int InvestmentStrategyId)
         {
-            throw new NotImplementedException();
+            var res = _repository.GetInvestment(InvestmentStrategyId);
+            return Task.FromResult(res);
         }
 
         public Task<InvestmentDTO> UpdateInvestment(InvestmentDTO request, string email)

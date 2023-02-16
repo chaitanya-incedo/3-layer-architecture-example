@@ -1,4 +1,5 @@
 ﻿using Advisor.Core.Domain.DTOs;
+using Advisor.Core.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,6 @@ namespace Advisor.Core.Interfaces.Repositories
     {
         InvestmentDTO CreateInvestment(InvestmentDTO request,string email);
         InvestmentDTO UpdateInvestment(InvestmentDTO request, string email);
-        InvestmentDTO GetInvestment(InvestmentDTO request);
+        List<InvestmentStrategy>? GetInvestment(int InvestmentStrategyId);
     }
 }

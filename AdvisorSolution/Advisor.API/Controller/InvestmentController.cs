@@ -3,6 +3,9 @@ using Advisor.Core.Interfaces.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Advisor.Core.Domain;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace Advisor.API.Controller
 {
@@ -21,13 +24,21 @@ namespace Advisor.API.Controller
             _httpContext = httpContext;
         }
 
-        [HttpPost("Register")]
+        [HttpPost("Register"),Authorize(Roles = "advisor")]
         public async Task<ActionResult<InvestmentDTO>> Create(InvestmentDTO request)
         {
             var email = _httpContext.HttpContext.User.FindFirstValue(ClaimTypes.Email);
-
+            Console.WriteLine(email);
             var res = await _service.CreateInvestment(request,email);
             return Ok("Investment Added.");
+        }
+
+        [HttpGet("GetInvestmentInformation"), Authorize(Roles = "advisor")]
+        public async Task<ActionResult<InvestmentDTO>> GetInvestment(int InvestmentStrategyId) {
+            var res = await _service.GetInvestment(InvestmentStrategyId);
+            if (res is null)
+                return NotFound();
+            return Ok(res);
         }
     }
 }
