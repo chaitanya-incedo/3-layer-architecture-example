@@ -56,12 +56,16 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     };
 });
 
-builder.Services.AddCors(p => p.AddPolicy("CorsPolicy", build => {
+builder.Services.AddCors(p => p.AddPolicy("CorsPolicy", build =>
+{
     build.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
 }));
 
 var app = builder.Build();
-
+/*app.UseCors(policy => policy.AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .SetIsOriginAllowed(origin => true)
+                            .AllowCredentials());*/
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -72,6 +76,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseCors("CorsPolicy");
+
 
 app.UseAuthentication();
 
