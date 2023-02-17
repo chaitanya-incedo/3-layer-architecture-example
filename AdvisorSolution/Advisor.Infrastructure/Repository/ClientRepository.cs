@@ -71,6 +71,8 @@ namespace Advisor.Infrastructure.Repository
             AdvisorClient ac=new AdvisorClient();
             ac.Advisor = res;
             ac.Client = client;
+            _context.AdvisorClients.Add(ac);
+            _context.SaveChanges();
             return request;
         }
 
