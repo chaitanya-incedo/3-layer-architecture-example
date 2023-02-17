@@ -59,15 +59,15 @@ namespace Advisor.Infrastructure.Repository
             
         }
 
-        public List<InvestmentStrategy>? GetInvestment(int InvestmentStrategyId)
+/*        public List<InvestmentStrategy>? GetInvestment(int InvestmentStrategyId)
         {
             if (!(_context.InvestmentStrategies.Any(X => X.InvestmentStrategyID == InvestmentStrategyId)))
                 return null;
             InvestmentDTO ret = new InvestmentDTO();
 
             var pg = _context.InvestmentStrategies.Where(c => c.InvestmentStrategyID == InvestmentStrategyId).Include(c=>c.InvestorInfo).Include(c=>c.InvestmentTypes);
-            return pg.ToList();
-        }
+            ret.AccountID=p
+        }*/
 
         public InvestmentDTO UpdateInvestment(InvestmentDTO request, string email)
         {

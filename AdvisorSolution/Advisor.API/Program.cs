@@ -18,9 +18,20 @@ ConfigurationManager configuration = builder.Configuration;
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddSwaggerGen();
 
 /*builder.Services.AddScoped<IEmailService, EmailService>();*/
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.
+            GetBytes(configuration.GetSection("AppSettings:Token").Value)),
+        ValidateIssuer = false,
+        ValidateAudience = false
+    };
+});
 
 builder.Services.AddDbContext<AdvisorDbContext>(
             opt => opt.UseSqlServer(configuration.GetConnectionString("Capstone"),
@@ -28,11 +39,13 @@ builder.Services.AddDbContext<AdvisorDbContext>(
 
 builder.Services.AddScoped<IAdvisorRegistrationService, AdvisorRegistrationService>();
 builder.Services.AddScoped<IAdvisorRegistrationRepository, AdvisorRegistrationRepository>();
+builder.Services.AddScoped<IClientService, ClientService>();
+builder.Services.AddScoped<IClientRepository, ClientRepository>();
 
 builder.Services.AddScoped<IInvestmentService, InvestmentService>();
 builder.Services.AddScoped<IInvestmentRepository, InvestmentRepository>();
 
-builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
@@ -45,27 +58,19 @@ builder.Services.AddSwaggerGen(options =>
 
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.
-            GetBytes(configuration.GetSection("AppSettings:Token").Value)),
-        ValidateIssuer = false,
-        ValidateAudience = false
-    };
-});
 
-builder.Services.AddCors(p => p.AddPolicy("CorsPolicy", build =>
+
+/*builder.Services.AddCors(p => p.AddPolicy("CorsPolicy", build =>
 {
     build.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
-}));
+}));*/ //mine
 
 var app = builder.Build();
-/*app.UseCors(policy => policy.AllowAnyHeader()
+app.UseCors(policy => policy.AllowAnyHeader()
                             .AllowAnyMethod()
                             .SetIsOriginAllowed(origin => true)
-                            .AllowCredentials());*/
+                            .AllowCredentials());
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -75,8 +80,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseCors("CorsPolicy");
-
+/*app.UseCors("CorsPolicy");*/ //mine
 
 app.UseAuthentication();
 

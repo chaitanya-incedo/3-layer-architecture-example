@@ -24,11 +24,11 @@ namespace Advisor.Core.Services
             return Task.FromResult(res);
         }
 
-        public Task<List<InvestmentStrategy>?> GetInvestment(int InvestmentStrategyId)
+/*        public Task<List<InvestmentStrategy>?> GetInvestment(int InvestmentStrategyId)
         {
             var res = _repository.GetInvestment(InvestmentStrategyId);
             return Task.FromResult(res);
-        }
+        }*/
 
         public Task<InvestmentDTO> UpdateInvestment(InvestmentDTO request, string email)
         {

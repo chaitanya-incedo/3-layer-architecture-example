@@ -16,16 +16,13 @@ namespace Advisor.Infrastructure.Repository
     {
         private readonly AdvisorDbContext _context;
         private readonly IConfiguration _configuration;
-        
         private static Random random = new Random();
 
         public AdvisorRegistrationRepository(IConfiguration configuration, AdvisorDbContext context, IHttpContextAccessor httpContext)
         {
             _configuration = configuration;
             _context = context;
-            
         }
-
 
         public AdvisorRegisterDTO? CreateAdvisor(AdvisorRegisterDTO request)
         {
@@ -120,10 +117,10 @@ namespace Advisor.Infrastructure.Repository
         private string CreateToken(Users user)
         {
             List<Claim> claims = new List<Claim>
-                                                                       {
-                                                                           new Claim(ClaimTypes.Email,user.Email),
-                                                                           new Claim(ClaimTypes.Role, "advisor")//user.role
-                                                                       };
+            {
+                 new Claim(ClaimTypes.Email,user.Email),
+                 new Claim(ClaimTypes.Role, "advisor")//user.role
+            };
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
             var token = new JwtSecurityToken(

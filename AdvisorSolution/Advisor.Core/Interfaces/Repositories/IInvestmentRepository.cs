@@ -12,6 +12,6 @@ namespace Advisor.Core.Interfaces.Repositories
     {
         InvestmentDTO CreateInvestment(InvestmentDTO request,string email);
         InvestmentDTO UpdateInvestment(InvestmentDTO request, string email);
-        List<InvestmentStrategy>? GetInvestment(int InvestmentStrategyId);
+/*        List<InvestmentStrategy>? GetInvestment(int InvestmentStrategyId);*/
     }
 }

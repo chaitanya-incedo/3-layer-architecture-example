@@ -12,6 +12,6 @@ namespace Advisor.Core.Interfaces.Services
     {
         Task<InvestmentDTO> CreateInvestment(InvestmentDTO request,string email);
         Task<InvestmentDTO> UpdateInvestment(InvestmentDTO request, string email);
-        Task<List<InvestmentStrategy>?> GetInvestment(int InvestmentStrategyId);
-    }
+/*        Task<List<InvestmentStrategy>?> GetInvestment(int InvestmentStrategyId);
+*/    }
 }
