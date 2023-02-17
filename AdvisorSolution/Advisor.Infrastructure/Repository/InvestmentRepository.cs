@@ -55,6 +55,7 @@ namespace Advisor.Infrastructure.Repository
             strategy.InvestorInfoID=info1.InvestorInfoID;
             _context.InvestmentStrategies.Add(strategy);
             _context.SaveChanges();
+
             return request;
             
         }

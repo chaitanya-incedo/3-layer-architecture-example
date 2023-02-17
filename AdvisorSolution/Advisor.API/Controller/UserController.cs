@@ -44,30 +44,41 @@ namespace Advisor.API.Controller
             return Ok(res);
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-        [HttpGet, Authorize(Roles = "advisor")]
-        public ActionResult<string> GetMeForAdvisor()
+        [HttpPut("Update-client-personal-info"), Authorize(Roles = "advisor")]
+        public async Task<ActionResult<AdvisorInfoDTO>> UpdateClient(AdvisorInfoDTO info, string ClientId)
         {
-            Console.WriteLine("here");
-            string result = string.Empty;
-            if (_httpContext.HttpContext != null)
-            {
-                result = _httpContext.HttpContext.User.FindFirstValue(ClaimTypes.Email);
-            }
-
-            return Ok(result);
+            AdvisorInfoDTO res = await _clientService.UpdateClient(info, ClientId);
+            if (res is null)
+                return NoContent();
+            return Ok(res);
         }
+
+        [HttpGet("Get-All-Clients-for-an-advisor"), Authorize(Roles = "advisor")]
+        public async Task<ActionResult<List<AdvisorInfoDTO>>> GetAllClientsForAnAdvisor()
+        {
+            return Ok(await _service.GetAllAdvisors());
+        }
+
+
+
+
+
+
+
+
+
+        /*        [HttpGet, Authorize(Roles = "advisor")]
+                public ActionResult<string> GetMeForAdvisor()
+                {
+                    Console.WriteLine("here");
+                    string result = string.Empty;
+                    if (_httpContext.HttpContext != null)
+                    {
+                        result = _httpContext.HttpContext.User.FindFirstValue(ClaimTypes.Email);
+                    }
+
+                    return Ok(result);
+                }*/
 
         [HttpGet("Advisor-Info"), Authorize(Roles = "advisor")]
         public async Task<ActionResult<AdvisorInfoDTO?>> GetAdvisorInfo()

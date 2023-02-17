@@ -39,6 +39,7 @@ builder.Services.AddDbContext<AdvisorDbContext>(
 
 builder.Services.AddScoped<IAdvisorRegistrationService, AdvisorRegistrationService>();
 builder.Services.AddScoped<IAdvisorRegistrationRepository, AdvisorRegistrationRepository>();
+
 builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
 

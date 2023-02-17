@@ -26,7 +26,6 @@ namespace Advisor.API.Controller
         public async Task<ActionResult<InvestmentDTO>> Create(InvestmentDTO request)
         {
             var email = _httpContext.HttpContext.User.FindFirstValue(ClaimTypes.Email);
-            Console.WriteLine(email);
             var res = await _service.CreateInvestment(request,email);
             return Ok("Investment Added.");
         }
