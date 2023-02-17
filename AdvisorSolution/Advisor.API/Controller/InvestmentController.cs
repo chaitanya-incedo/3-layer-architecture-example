@@ -22,7 +22,7 @@ namespace Advisor.API.Controller
             _httpContext = httpContext;
         }
 
-        [HttpPost("Register"),Authorize(Roles = "advisor")]
+        [HttpPost("Create"),Authorize(Roles = "advisor")]
         public async Task<ActionResult<InvestmentDTO>> Create(InvestmentDTO request)
         {
             var email = _httpContext.HttpContext.User.FindFirstValue(ClaimTypes.Email);

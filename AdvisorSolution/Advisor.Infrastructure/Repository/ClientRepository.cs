@@ -53,7 +53,7 @@ namespace Advisor.Infrastructure.Repository
             advisor.FirstName = request.FirstName;
             advisor.LastName = request.LastName;
             advisor.SortName = request.LastName + ", " + request.FirstName;
-            advisor.RoleID = 1;
+            advisor.RoleID = 2;
             advisor.AdvisorID = null;
             advisor.ClientID = cliId;
             advisor.AgentID = null;
