@@ -15,6 +15,7 @@ namespace Advisor.Core.Interfaces.Services
         Task<List<AdvisorInfoDTO>> GetAllAdvisors();
         Task<AdvisorInfoDTO> UpdateAdvisor(string email, AdvisorInfoDTO info);
         Task<List<AdvisorInfoDTO>> DeleteUser(string email);
+        Task<List<ClientInfoDto>> GetAllClientsForAnAdvisor(string email);
 
     }
 }

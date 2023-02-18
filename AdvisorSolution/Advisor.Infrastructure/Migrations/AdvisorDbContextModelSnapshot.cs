@@ -30,17 +30,23 @@ namespace Advisor.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<int>("AdvisorID")
+                    b.Property<int>("AdvisorId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ClientID")
+                    b.Property<int>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UsersUserID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UsersUserID1")
                         .HasColumnType("int");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("AdvisorID");
+                    b.HasIndex("UsersUserID");
 
-                    b.HasIndex("ClientID");
+                    b.HasIndex("UsersUserID1");
 
                     b.ToTable("AdvisorClients");
                 });
@@ -353,21 +359,13 @@ namespace Advisor.Infrastructure.Migrations
 
             modelBuilder.Entity("Advisor.Core.Domain.Models.AdvisorClient", b =>
                 {
-                    b.HasOne("Advisor.Core.Domain.Models.Users", "Advisor")
+                    b.HasOne("Advisor.Core.Domain.Models.Users", null)
                         .WithMany("AdvisorsList")
-                        .HasForeignKey("AdvisorID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .HasForeignKey("UsersUserID");
 
-                    b.HasOne("Advisor.Core.Domain.Models.Users", "Client")
+                    b.HasOne("Advisor.Core.Domain.Models.Users", null)
                         .WithMany("ClientList")
-                        .HasForeignKey("ClientID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Advisor");
-
-                    b.Navigation("Client");
+                        .HasForeignKey("UsersUserID1");
                 });
 
             modelBuilder.Entity("Advisor.Core.Domain.Models.InvestmentStrategy", b =>

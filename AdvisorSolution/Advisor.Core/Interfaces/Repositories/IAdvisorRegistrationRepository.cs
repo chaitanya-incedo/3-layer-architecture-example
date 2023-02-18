@@ -15,6 +15,7 @@ namespace Advisor.Core.Interfaces.Repositories
         List<AdvisorInfoDTO> GetAllAdvisors();
         AdvisorInfoDTO UpdateAdvisor(string email, AdvisorInfoDTO info);
         List<AdvisorInfoDTO> DeleteUser(string email);
+        List<ClientInfoDto> GetAllClientsForAnAdvisor(string email);
 
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Advisor.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class @try : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -114,20 +114,22 @@ namespace Advisor.Infrastructure.Migrations
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    AdvisorID = table.Column<int>(type: "int", nullable: false),
-                    ClientID = table.Column<int>(type: "int", nullable: false)
+                    AdvisorId = table.Column<int>(type: "int", nullable: false),
+                    ClientId = table.Column<int>(type: "int", nullable: false),
+                    UsersUserID = table.Column<int>(type: "int", nullable: true),
+                    UsersUserID1 = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AdvisorClients", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_AdvisorClients_Users_AdvisorID",
-                        column: x => x.AdvisorID,
+                        name: "FK_AdvisorClients_Users_UsersUserID",
+                        column: x => x.UsersUserID,
                         principalTable: "Users",
                         principalColumn: "UserID");
                     table.ForeignKey(
-                        name: "FK_AdvisorClients_Users_ClientID",
-                        column: x => x.ClientID,
+                        name: "FK_AdvisorClients_Users_UsersUserID1",
+                        column: x => x.UsersUserID1,
                         principalTable: "Users",
                         principalColumn: "UserID");
                 });
@@ -191,14 +193,14 @@ namespace Advisor.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AdvisorClients_AdvisorID",
+                name: "IX_AdvisorClients_UsersUserID",
                 table: "AdvisorClients",
-                column: "AdvisorID");
+                column: "UsersUserID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AdvisorClients_ClientID",
+                name: "IX_AdvisorClients_UsersUserID1",
                 table: "AdvisorClients",
-                column: "ClientID");
+                column: "UsersUserID1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_InvestmentStrategies_InvestmentTypeID",

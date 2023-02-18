@@ -69,8 +69,8 @@ namespace Advisor.Infrastructure.Repository
             var client = _context.Users.FirstOrDefault(X => X.Email == request.Email);
             var clientuserid = client.UserID;
             AdvisorClient ac=new AdvisorClient();
-            ac.Advisor = res;
-            ac.Client = client;
+            ac.AdvisorId = res.UserID;
+            ac.ClientId = client.UserID;
             _context.AdvisorClients.Add(ac);
             _context.SaveChanges();
             return request;

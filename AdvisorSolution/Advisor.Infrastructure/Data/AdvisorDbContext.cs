@@ -17,12 +17,12 @@ namespace Advisor.Infrastructure.Data
         public DbSet<InvestmentType> InvestmentTypes { get; set; }
         public DbSet<InvestmentStrategy> InvestmentStrategies { get; set; }
         public DbSet<AdvisorClient> AdvisorClients { get; set; }
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+/*        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Users>().HasMany(t => t.AdvisorsList).WithOne(m=>m.Advisor).OnDelete(DeleteBehavior.NoAction);
             modelBuilder.Entity<Users>().HasMany(t => t.ClientList).WithOne(m => m.Client).OnDelete(DeleteBehavior.NoAction);
 
-        }
+        }*/
     }
 
 }

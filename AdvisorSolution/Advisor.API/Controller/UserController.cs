@@ -13,7 +13,6 @@ namespace Advisor.API.Controller
     public class UserController : ControllerBase
     {
         private readonly IAdvisorRegistrationService _service;
-
         private readonly IHttpContextAccessor _httpContext;
         private readonly IClientService _clientService;
 
@@ -56,7 +55,13 @@ namespace Advisor.API.Controller
         [HttpGet("Get-All-Clients-for-an-advisor"), Authorize(Roles = "advisor")]
         public async Task<ActionResult<List<AdvisorInfoDTO>>> GetAllClientsForAnAdvisor()
         {
-            return Ok(await _service.GetAllAdvisors());
+            var result = string.Empty;
+            if (_httpContext.HttpContext != null)
+            {
+                result = _httpContext.HttpContext.User.FindFirstValue(ClaimTypes.Email);
+            }
+            Console.WriteLine(result);
+            return Ok(await _service.GetAllClientsForAnAdvisor(result));
         }
 
 

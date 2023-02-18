@@ -8,12 +8,10 @@ namespace Advisor.Core.Domain.Models
     {
         [Key]
         public int ID { get; set; }
+        
+        public int AdvisorId { get; set; }
 
-        [ForeignKey("AdvisorID")]
-        public virtual Users Advisor { get; set; }
-
-        [ForeignKey("ClientID")]
-        public virtual Users Client { get; set; }
+        public int ClientId { get; set; }
 
     }
 }

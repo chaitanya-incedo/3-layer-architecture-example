@@ -204,17 +204,19 @@ namespace Advisor.Infrastructure.Repository
 
             foreach (var user in _context.Users)
             {
-                AdvisorInfoDTO advisorInfo = new AdvisorInfoDTO();
-                advisorInfo.Email = user.Email;
-                advisorInfo.LastName = user.LastName;
-                advisorInfo.FirstName = user.FirstName;
-                advisorInfo.AdvisorID = user.AdvisorID;
-                advisorInfo.Address = user.Address;
-                advisorInfo.City = user.City;
-                advisorInfo.Company = user.Company;
-                advisorInfo.Phone = user.Phone;
-                advisorInfo.State = user.State;
-                users.Add(advisorInfo);
+                if (user.AdvisorID != null) {
+                    AdvisorInfoDTO advisorInfo = new AdvisorInfoDTO();
+                    advisorInfo.Email = user.Email;
+                    advisorInfo.LastName = user.LastName;
+                    advisorInfo.FirstName = user.FirstName;
+                    advisorInfo.AdvisorID = user.AdvisorID;
+                    advisorInfo.Address = user.Address;
+                    advisorInfo.City = user.City;
+                    advisorInfo.Company = user.Company;
+                    advisorInfo.Phone = user.Phone;
+                    advisorInfo.State = user.State;
+                    users.Add(advisorInfo);
+                }
             }
 
             return users;
@@ -244,6 +246,33 @@ namespace Advisor.Infrastructure.Repository
             _context.Users.Remove(user);
             _context.SaveChanges();
             return GetAllAdvisors();
+        }
+
+        public List<ClientInfoDto> GetAllClientsForAnAdvisor(string email)
+        {
+            var adv=_context.Users.First(x => x.Email == email);
+            var advid = adv.UserID;
+            List<AdvisorClient> clients = _context.AdvisorClients.Where(x => x.AdvisorId==advid).ToList();
+            List<int> clientids = new List<int>();
+            foreach (var x in clients) {
+                clientids.Add(x.ClientId);
+            }
+            List<ClientInfoDto> list = new List<ClientInfoDto>();
+            foreach (int id in clientids) {
+                ClientInfoDto clientInfo = new ClientInfoDto();
+                Users Client = _context.Users.First(c => c.UserID == id);
+                clientInfo.Address = Client.Address;
+                clientInfo.City = Client.City;
+                clientInfo.ClientID = Client.ClientID;
+                clientInfo.Email = Client.Email;
+                clientInfo.FirstName = Client.FirstName;
+                clientInfo.LastName = Client.LastName;
+                clientInfo.Company= Client.Company;
+                clientInfo.State= Client.State;
+                clientInfo.Phone= Client.Phone;
+                list.Add(clientInfo);
+            }
+            return list;
         }
     }
 }

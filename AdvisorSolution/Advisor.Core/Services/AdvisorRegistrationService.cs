@@ -70,6 +70,10 @@ namespace Advisor.Core.Services
             return Task.FromResult(_repository.DeleteUser(email));
         }
 
+        public Task<List<ClientInfoDto>> GetAllClientsForAnAdvisor(string email)
+        {
+            return Task.FromResult(_repository.GetAllClientsForAnAdvisor(email));
+        }
     }
 
 }
