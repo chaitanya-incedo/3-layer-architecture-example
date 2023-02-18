@@ -8,6 +8,7 @@ namespace Advisor.Core.Domain.DTOs
 {
     public class ClientInfoDto
     {
+        public int UserId { get; set; }
         public string LastName { get; set; } = null!;
 
         public string FirstName { get; set; } = null!;

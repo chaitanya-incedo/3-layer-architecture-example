@@ -105,7 +105,5 @@ namespace Advisor.Core.Domain.Models
 
         public List<InvestorInfo>? investorInfos { get; set; }
 
-        public virtual List<AdvisorClient> AdvisorsList { get; set; }
-        public virtual List<AdvisorClient> ClientList { get; set; }
     }
 }

@@ -261,6 +261,7 @@ namespace Advisor.Infrastructure.Repository
             foreach (int id in clientids) {
                 ClientInfoDto clientInfo = new ClientInfoDto();
                 Users Client = _context.Users.First(c => c.UserID == id);
+                clientInfo.UserId = id;
                 clientInfo.Address = Client.Address;
                 clientInfo.City = Client.City;
                 clientInfo.ClientID = Client.ClientID;

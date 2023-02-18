@@ -27,15 +27,22 @@ namespace Advisor.API.Controller
         {
             var email = _httpContext.HttpContext.User.FindFirstValue(ClaimTypes.Email);
             var res = await _service.CreateInvestment(request,email);
-            return Ok("Investment Added.");
+            return Ok(res);
         }
 
-/*        [HttpGet("GetInvestmentInformation"), Authorize(Roles = "advisor")]
-        public async Task<ActionResult<InvestmentDTO>> GetInvestment(int InvestmentStrategyId) {
-            var res = await _service.GetInvestment(InvestmentStrategyId);
-            if (res is null)
-                return NotFound();
+        /*        [HttpGet("GetInvestmentInformation"), Authorize(Roles = "advisor")]
+                public async Task<ActionResult<InvestmentDTO>> GetInvestment(int InvestmentStrategyId) {
+                    var res = await _service.GetInvestment(InvestmentStrategyId);
+                    if (res is null)
+                        return NotFound();
+                    return Ok(res);
+                }*/
+
+        [HttpPut("update"), Authorize(Roles = "advisor")]
+        public async Task<ActionResult<InvestmentDTO>> Update(InvestmentDTO request)
+        {
+            var res = await _service.UpdateInvestment(request);
             return Ok(res);
-        }*/
+        }
     }
 }

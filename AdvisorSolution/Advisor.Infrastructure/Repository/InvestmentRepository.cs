@@ -70,9 +70,41 @@ namespace Advisor.Infrastructure.Repository
             ret.AccountID=p
         }*/
 
-        public InvestmentDTO UpdateInvestment(InvestmentDTO request, string email)
+        public InvestmentDTO UpdateInvestment(InvestmentDTO request)
         {
-            throw new NotImplementedException();
+            var oldinfo = _context.InvestorInfos.First(X => X.UserID == request.UserID);
+
+            InvestmentStrategy strategy = new InvestmentStrategy();
+            InvestmentType type = new InvestmentType();
+            InvestorInfo info = new InvestorInfo();
+            var time = DateTime.Now;
+            info.InvestmentName = request.InvestmentName;
+            info.Active = request.Active;
+            info.ModifiedDate = time;
+            info.DeletedFlag = 0;
+            _context.InvestorInfos.Update(info);
+            _context.SaveChanges();
+
+            type.InvestmentTypeName = request.InvestmentTypeName;
+            type.ModifiedDate = time;
+            type.DeletedFlag = 0;
+            _context.InvestmentTypes.Update(type);
+            _context.SaveChanges();
+
+            InvestmentType type1 = _context.InvestmentTypes.First(x => x.InvestmentTypeName == request.InvestmentTypeName);
+            InvestorInfo info1 = _context.InvestorInfos.First(s => s.UserID == request.UserID);
+            strategy.ModifiedDate = time;
+            strategy.DeletedFlag = 0;
+            strategy.InvestmentAmount = request.InvestmentAmount;
+            strategy.ModelAPLID = request.ModelAPLID;
+            strategy.AccountID = request.AccountID;
+            strategy.StrategyName = request.StrategyName;
+            strategy.InvestmentTypeID = type1.InvestmentTypeID;
+            strategy.InvestorInfoID = info1.InvestorInfoID;
+            _context.InvestmentStrategies.Update(strategy);
+            _context.SaveChanges();
+
+            return request;
         }
     }
 }

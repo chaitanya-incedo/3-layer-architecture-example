@@ -30,9 +30,10 @@ namespace Advisor.Core.Services
             return Task.FromResult(res);
         }*/
 
-        public Task<InvestmentDTO> UpdateInvestment(InvestmentDTO request, string email)
+        public Task<InvestmentDTO> UpdateInvestment(InvestmentDTO request)
         {
-            throw new NotImplementedException();
+            var res = _repository.UpdateInvestment(request);
+            return Task.FromResult(res);
         }
     }
 }
