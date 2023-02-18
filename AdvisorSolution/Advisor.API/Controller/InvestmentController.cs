@@ -39,9 +39,9 @@ namespace Advisor.API.Controller
                 }*/
 
         [HttpPut("update"), Authorize(Roles = "advisor")]
-        public async Task<ActionResult<InvestmentDTO>> Update(InvestmentDTO request)
+        public async Task<ActionResult<InvestmentDTO>> Update(int infoid, int typeid, int strategyid, InvestmentDTO request)
         {
-            var res = await _service.UpdateInvestment(request);
+            var res = await _service.UpdateInvestment(infoid,typeid,strategyid,request);
             return Ok(res);
         }
     }

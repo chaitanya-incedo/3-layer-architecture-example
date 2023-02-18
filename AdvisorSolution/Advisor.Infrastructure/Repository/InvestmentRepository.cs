@@ -24,6 +24,7 @@ namespace Advisor.Infrastructure.Repository
             InvestmentStrategy strategy = new InvestmentStrategy();
             InvestmentType type=new InvestmentType();
             InvestorInfo info=new InvestorInfo();
+
             info.UserID=request.UserID;
             info.InvestmentName=request.InvestmentName;
             info.Active=request.Active;
@@ -44,6 +45,7 @@ namespace Advisor.Infrastructure.Repository
 
             InvestmentType type1 = _context.InvestmentTypes.First(x=>x.InvestmentTypeName==request.InvestmentTypeName);
             InvestorInfo info1 = _context.InvestorInfos.First(s => s.UserID == request.UserID);
+
             strategy.ModifiedDate=DateTime.Now;
             strategy.DeletedFlag= 0;
             strategy.ModifiedBy= advisor.AdvisorID;
@@ -70,38 +72,38 @@ namespace Advisor.Infrastructure.Repository
             ret.AccountID=p
         }*/
 
-        public InvestmentDTO UpdateInvestment(InvestmentDTO request)
+        public InvestmentDTO UpdateInvestment(int infoid,int typeid,int strategyid, InvestmentDTO request)
         {
-            var oldinfo = _context.InvestorInfos.First(X => X.UserID == request.UserID);
-
-            InvestmentStrategy strategy = new InvestmentStrategy();
-            InvestmentType type = new InvestmentType();
-            InvestorInfo info = new InvestorInfo();
+            var oldinfo = _context.InvestorInfos.FirstOrDefault(X => X.InvestorInfoID == infoid);
             var time = DateTime.Now;
-            info.InvestmentName = request.InvestmentName;
-            info.Active = request.Active;
-            info.ModifiedDate = time;
-            info.DeletedFlag = 0;
-            _context.InvestorInfos.Update(info);
+
+            oldinfo.InvestmentName = request.InvestmentName;
+            oldinfo.Active = request.Active;
+            oldinfo.ModifiedDate = time;
+            oldinfo.DeletedFlag = 0;
+            _context.InvestorInfos.Update(oldinfo);
             _context.SaveChanges();
 
-            type.InvestmentTypeName = request.InvestmentTypeName;
-            type.ModifiedDate = time;
-            type.DeletedFlag = 0;
-            _context.InvestmentTypes.Update(type);
+            var oldtype = _context.InvestmentTypes.FirstOrDefault(X => X.InvestmentTypeID == typeid);
+            oldtype.InvestmentTypeName = request.InvestmentTypeName;
+            oldtype.ModifiedDate = time;
+            oldtype.DeletedFlag = 0;
+            _context.InvestmentTypes.Update(oldtype);
             _context.SaveChanges();
 
-            InvestmentType type1 = _context.InvestmentTypes.First(x => x.InvestmentTypeName == request.InvestmentTypeName);
-            InvestorInfo info1 = _context.InvestorInfos.First(s => s.UserID == request.UserID);
-            strategy.ModifiedDate = time;
-            strategy.DeletedFlag = 0;
-            strategy.InvestmentAmount = request.InvestmentAmount;
-            strategy.ModelAPLID = request.ModelAPLID;
-            strategy.AccountID = request.AccountID;
-            strategy.StrategyName = request.StrategyName;
-            strategy.InvestmentTypeID = type1.InvestmentTypeID;
-            strategy.InvestorInfoID = info1.InvestorInfoID;
-            _context.InvestmentStrategies.Update(strategy);
+            InvestmentType type1 = _context.InvestmentTypes.First(x => x.InvestmentTypeID == typeid);
+            InvestorInfo info1 = _context.InvestorInfos.First(s => s.InvestorInfoID == infoid);
+            var oldstrategy = _context.InvestmentStrategies.FirstOrDefault(x => x.InvestmentStrategyID == strategyid);
+
+            oldstrategy.ModifiedDate = time;
+            oldstrategy.DeletedFlag = 0;
+            oldstrategy.InvestmentAmount = request.InvestmentAmount;
+            oldstrategy.ModelAPLID = request.ModelAPLID;
+            oldstrategy.AccountID = request.AccountID;
+            oldstrategy.StrategyName = request.StrategyName;
+            oldstrategy.InvestmentTypeID = type1.InvestmentTypeID;
+            oldstrategy.InvestorInfoID = info1.InvestorInfoID;
+            _context.InvestmentStrategies.Update(oldstrategy);
             _context.SaveChanges();
 
             return request;

@@ -30,9 +30,9 @@ namespace Advisor.Core.Services
             return Task.FromResult(res);
         }*/
 
-        public Task<InvestmentDTO> UpdateInvestment(InvestmentDTO request)
+        public Task<InvestmentDTO> UpdateInvestment(int infoid, int typeid, int strategyid, InvestmentDTO request)
         {
-            var res = _repository.UpdateInvestment(request);
+            var res = _repository.UpdateInvestment(infoid,typeid,strategyid,request);
             return Task.FromResult(res);
         }
     }
