@@ -93,6 +93,7 @@ namespace Advisor.Infrastructure.Repository
 
             InvestmentType type1 = _context.InvestmentTypes.First(x => x.InvestmentTypeID == typeid);
             InvestorInfo info1 = _context.InvestorInfos.First(s => s.InvestorInfoID == infoid);
+
             var oldstrategy = _context.InvestmentStrategies.FirstOrDefault(x => x.InvestmentStrategyID == strategyid);
 
             oldstrategy.ModifiedDate = time;

@@ -15,44 +15,73 @@ namespace Advisor.API.Controller
         private readonly IAdvisorRegistrationService _service;
         private readonly IHttpContextAccessor _httpContext;
         private readonly IClientService _clientService;
+        private readonly IUserService _userService;
 
-        public UserController(IAdvisorRegistrationService service, IHttpContextAccessor httpContext, IClientService clientService)
+        public UserController(IUserService userService,IAdvisorRegistrationService service, IHttpContextAccessor httpContext, IClientService clientService)
         {
+            _userService = userService;
             _service = service;
             _httpContext = httpContext;
             _clientService=clientService;
         }
 
-        [HttpPost("ClientRegister"),Authorize(Roles = "advisor")]
-        public async Task<ActionResult<AdvisorRegisterDTO>> ClientRegister(AdvisorRegisterDTO request)
+
+        [HttpPost("Registration")]
+        public async Task<ActionResult<RegistrationDTO>> Registration(RegistrationDTO request)
         {
-            var email = _httpContext.HttpContext.User.FindFirstValue(ClaimTypes.Email);
-            var res = await _clientService.CreateClient(request,email);
-            if (res == null)
-                return BadRequest("User already Exists.");
-            return Ok(res);
+            if (request.RoleID == 2)
+            {
+                var advisorid = request.AdvisorID;
+                var res = await _userService.CreateClient(request, advisorid);
+                if (res == null)
+                    return BadRequest("Client already Exists.");
+                return Ok(res);
+            }
+            else {
+                var res = await _userService.CreateAdvisor(request);
+                if (res == null)
+                    return BadRequest("Advisor already Exists.");
+                return Ok(res);
+            }
+            
         }
 
-        [HttpPost("ClientLogin")]
-        public async Task<ActionResult<string>> ClientLogin(AdvisorLoginDTO request)
-        {
-            var res = await _clientService.LoginClient(request);
-            if (res.Equals("Email doesn't exist.") || res.Equals("Wrong password."))
-                return BadRequest(res);
 
-            return Ok(res);
-        }
 
-        [HttpPut("Update-client-personal-info"), Authorize(Roles = "advisor")]
-        public async Task<ActionResult<AdvisorInfoDTO>> UpdateClient(AdvisorInfoDTO info, string ClientId)
-        {
-            AdvisorInfoDTO res = await _clientService.UpdateClient(info, ClientId);
-            if (res is null)
-                return NoContent();
-            return Ok(res);
-        }
 
-        [HttpGet("Get-All-Clients-for-an-advisor"), Authorize(Roles = "advisor")]
+
+
+
+/*                                [HttpPost("ClientRegister"), Authorize(Roles = "advisor")]
+                                public async Task<ActionResult<AdvisorRegisterDTO>> ClientRegister(AdvisorRegisterDTO request)
+                                {
+                                    var email = _httpContext.HttpContext.User.FindFirstValue(ClaimTypes.Email);
+                                    var res = await _clientService.CreateClient(request,email);
+                                    if (res == null)
+                                        return BadRequest("User already Exists.");
+                                    return Ok(res);
+                                }*/
+
+                                [HttpPost("ClientLogin")]
+                                public async Task<ActionResult<string>> ClientLogin(AdvisorLoginDTO request)
+                                {
+                                    var res = await _clientService.LoginClient(request);
+                                    if (res.Equals("Email doesn't exist.") || res.Equals("Wrong password."))
+                                        return BadRequest(res);
+
+                                    return Ok(res);
+                                }
+
+                                [HttpPut("Update-client-personal-info"), Authorize(Roles = "advisor")]
+                                public async Task<ActionResult<AdvisorInfoDTO>> UpdateClient(AdvisorInfoDTO info, string ClientId)
+                                {
+                                    AdvisorInfoDTO res = await _clientService.UpdateClient(info, ClientId);
+                                    if (res is null)
+                                        return NoContent();
+                                    return Ok(res);
+                                }
+
+        [HttpGet("Get-All-Clients-for-an-advisor")/*, Authorize(Roles = "advisor")*/]
         public async Task<ActionResult<List<AdvisorInfoDTO>>> GetAllClientsForAnAdvisor()
         {
             var result = string.Empty;
@@ -107,14 +136,14 @@ namespace Advisor.API.Controller
             return Ok(await _service.GetAllAdvisors());
         }
 
-        [HttpPost("AdvisorRegister")]
+/*        [HttpPost("AdvisorRegister")]
         public async Task<ActionResult<AdvisorRegisterDTO>> AdvisorRegister(AdvisorRegisterDTO request)
         {
             var res = await _service.CreateAdvisor(request);
             if (res == null)
                 return BadRequest("User already Exists.");
             return Ok(res);
-        }
+        }*/
 
         [HttpPost("AdvisorLogin")]
         public async Task<ActionResult<string>> AdvisorLogin(AdvisorLoginDTO request)
