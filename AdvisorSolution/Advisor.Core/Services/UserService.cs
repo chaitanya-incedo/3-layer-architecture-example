@@ -29,5 +29,10 @@ namespace Advisor.Core.Services
 
             return Task.FromResult(res);
         }
+
+        public Task<AdvisorInfoDTO?> UpdateClient(AdvisorInfoDTO info, string ClientId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

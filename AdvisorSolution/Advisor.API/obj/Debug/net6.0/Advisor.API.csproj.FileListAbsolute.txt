@@ -96,9 +96,3 @@ C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\Adviso
 C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.API\bin\Debug\net6.0\MailKit.dll
 C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.API\bin\Debug\net6.0\MimeKit.dll
 C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.API\bin\Debug\net6.0\BouncyCastle.Crypto.dll
-C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.API\bin\Debug\net6.0\System.Web.Cors.dll
-C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.API\bin\Debug\net6.0\System.Net.Http.Formatting.dll
-C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.API\bin\Debug\net6.0\System.Web.Http.dll
-C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.API\bin\Debug\net6.0\System.Web.Http.Cors.dll
-C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.API\bin\Debug\net6.0\Newtonsoft.Json.dll
-C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.API\bin\Debug\net6.0\Newtonsoft.Json.Bson.dll

@@ -62,7 +62,7 @@ namespace Advisor.API.Controller
                                     return Ok(res);
                                 }*/
 
-                                [HttpPost("ClientLogin")]
+                                /*[HttpPost("ClientLogin")]
                                 public async Task<ActionResult<string>> ClientLogin(AdvisorLoginDTO request)
                                 {
                                     var res = await _clientService.LoginClient(request);
@@ -70,7 +70,7 @@ namespace Advisor.API.Controller
                                         return BadRequest(res);
 
                                     return Ok(res);
-                                }
+                                }*/
 
                                 [HttpPut("Update-client-personal-info"), Authorize(Roles = "advisor")]
                                 public async Task<ActionResult<AdvisorInfoDTO>> UpdateClient(AdvisorInfoDTO info, string ClientId)
@@ -81,7 +81,7 @@ namespace Advisor.API.Controller
                                     return Ok(res);
                                 }
 
-        [HttpGet("Get-All-Clients-for-an-advisor")/*, Authorize(Roles = "advisor")*/]
+        [HttpGet("Get-All-Clients-for-an-advisor"), Authorize(Roles = "advisor")]
         public async Task<ActionResult<List<AdvisorInfoDTO>>> GetAllClientsForAnAdvisor()
         {
             var result = string.Empty;
@@ -211,6 +211,7 @@ namespace Advisor.API.Controller
                 return NoContent();
             return Ok(res);
         }
+
         [HttpDelete("Delete-advisor"), Authorize(Roles = "advisor")]
         public async Task<ActionResult<List<AdvisorInfoDTO>>> DeleteUser()
         {

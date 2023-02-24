@@ -131,5 +131,23 @@ namespace Advisor.Infrastructure.Repository
             _context.SaveChanges();
             return request;
         }
+
+        public AdvisorInfoDTO? UpdateClient(AdvisorInfoDTO clientInfo, string ClientId)
+        {
+            var user = _context.Users.FirstOrDefault(x => x.ClientID == ClientId);
+            user.Email = clientInfo.Email;
+            user.LastName = clientInfo.LastName;
+            user.FirstName = clientInfo.FirstName;
+            user.AdvisorID = clientInfo.AdvisorID;
+            user.Address = clientInfo.Address;
+            user.City = clientInfo.City;
+            user.SortName = clientInfo.LastName + ", " + clientInfo.FirstName;
+            user.Company = clientInfo.Company;
+            user.Phone = clientInfo.Phone;
+            user.State = clientInfo.State;
+            _context.Update(user);
+            _context.SaveChanges();
+            return clientInfo;
+        }
     }
 }
