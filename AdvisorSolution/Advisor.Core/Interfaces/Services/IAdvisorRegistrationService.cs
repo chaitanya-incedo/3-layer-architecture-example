@@ -9,12 +9,13 @@ namespace Advisor.Core.Interfaces.Services
         Task<AdvisorRegisterDTO?> CreateAdvisor(AdvisorRegisterDTO request);
         Task<string> LoginAdvisor(AdvisorLoginDTO request);
         Task<string> ChangePassword(string email);
-        Task<string> ResetPassword(PasswordResetDTO request,string email);
+        Task<string> ResetPassword(PasswordResetDTO request);
         Task<string> ForgotPassword(PasswordResetWithoutLoginDTO request);
         Task<AdvisorInfoDTO?> GetAdvisorInfo(string email);
+        Task<AdvisorInfoDTO> GetClientInfo(string id);
         Task<List<AdvisorInfoDTO>> GetAllAdvisors();
         Task<AdvisorInfoDTO> UpdateAdvisor(string email, AdvisorInfoDTO info);
-        Task<List<AdvisorInfoDTO>> DeleteUser(string email);
+        Task<string> DeleteUser(int id,string email);
         Task<List<ClientInfoDto>> GetAllClientsForAnAdvisor(string email);
 
     }

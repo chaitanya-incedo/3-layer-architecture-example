@@ -149,10 +149,10 @@ namespace Advisor.Infrastructure.Repository
             return user.PasswordResetToken;
         }
 
-        public string ResetPasswordAdvAfterLogin(PasswordResetDTO reset, string email)
+        public string ResetPasswordAdvAfterLogin(PasswordResetDTO reset)
         {
-            var user = _context.Users.FirstOrDefault(x => x.Email == email);
-            if (reset.now > user.ResetTokenExpires)
+            var user = _context.Users.FirstOrDefault(x => x.Email == reset.email);
+            if (DateTime.Now > user.ResetTokenExpires)
                 return "Session expired.";
 
             if (!reset.token.Equals(user.PasswordResetToken))
@@ -168,6 +168,7 @@ namespace Advisor.Infrastructure.Repository
 
         public string ForgotPassword(PasswordResetWithoutLoginDTO request)
         {
+            DateTime now=DateTime.Now;
             var user = _context.Users.FirstOrDefault(x => x.Email == request.Email);
             if (user is null)
                 return "No User with this email exists.";
@@ -190,6 +191,24 @@ namespace Advisor.Infrastructure.Repository
             advisorInfo.LastName = user.LastName;
             advisorInfo.FirstName = user.FirstName;
             advisorInfo.AdvisorID = user.AdvisorID;
+            advisorInfo.Address = user.Address;
+            advisorInfo.City = user.City;
+            advisorInfo.Company = user.Company;
+            advisorInfo.Phone = user.Phone;
+            advisorInfo.State = user.State;
+            return advisorInfo;
+        }
+
+        public AdvisorInfoDTO GetClientInfo(string id)
+        {
+            var user = _context.Users.FirstOrDefault(x => x.ClientID == id);
+            if (user is null)
+                return null;
+            AdvisorInfoDTO advisorInfo = new AdvisorInfoDTO();
+            advisorInfo.Email = user.Email;
+            advisorInfo.LastName = user.LastName;
+            advisorInfo.FirstName = user.FirstName;
+            advisorInfo.AdvisorID = id;
             advisorInfo.Address = user.Address;
             advisorInfo.City = user.City;
             advisorInfo.Company = user.Company;
@@ -240,12 +259,14 @@ namespace Advisor.Infrastructure.Repository
             return advisorInfo;
         }
 
-        public List<AdvisorInfoDTO> DeleteUser(string email)
+        public string DeleteUser(int id,string email)
         {
-            var user = _context.Users.FirstOrDefault(x => x.Email == email);
-            _context.Users.Remove(user);
+            var user = _context.Users.FirstOrDefault(x => x.UserID == id);
+            user.DeletedFlag = 1;
+            user.Active = 0;
+            _context.Update(user);
             _context.SaveChanges();
-            return GetAllAdvisors();
+            return "User-Deleted";
         }
 
         public List<ClientInfoDto> GetAllClientsForAnAdvisor(string email)
@@ -259,19 +280,22 @@ namespace Advisor.Infrastructure.Repository
             }
             List<ClientInfoDto> list = new List<ClientInfoDto>();
             foreach (int id in clientids) {
+
                 ClientInfoDto clientInfo = new ClientInfoDto();
                 Users Client = _context.Users.First(c => c.UserID == id);
-                clientInfo.UserId = id;
-                clientInfo.Address = Client.Address;
-                clientInfo.City = Client.City;
-                clientInfo.ClientID = Client.ClientID;
-                clientInfo.Email = Client.Email;
-                clientInfo.FirstName = Client.FirstName;
-                clientInfo.LastName = Client.LastName;
-                clientInfo.Company= Client.Company;
-                clientInfo.State= Client.State;
-                clientInfo.Phone= Client.Phone;
-                list.Add(clientInfo);
+                if (Client.DeletedFlag == 0) {
+                    clientInfo.UserId = id;
+                    clientInfo.Address = Client.Address;
+                    clientInfo.City = Client.City;
+                    clientInfo.ClientID = Client.ClientID;
+                    clientInfo.Email = Client.Email;
+                    clientInfo.FirstName = Client.FirstName;
+                    clientInfo.LastName = Client.LastName;
+                    clientInfo.Company = Client.Company;
+                    clientInfo.State = Client.State;
+                    clientInfo.Phone = Client.Phone;
+                    list.Add(clientInfo);
+                }
             }
             return list;
         }

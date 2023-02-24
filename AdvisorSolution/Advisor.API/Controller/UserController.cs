@@ -129,6 +129,14 @@ namespace Advisor.API.Controller
                 return NoContent();
             return Ok(res);
         }
+        [HttpGet("client-Info"), Authorize(Roles = "advisor")]
+        public async Task<ActionResult<AdvisorInfoDTO?>> GetClientInfo(string id)
+        {
+            AdvisorInfoDTO res = await _service.GetClientInfo(id);
+            if (res is null)
+                return NoContent();
+            return Ok(res);
+        }
 
         [HttpGet("Get-All-Advisors"), Authorize(Roles = "advisor")]
         public async Task<ActionResult<List<AdvisorInfoDTO>>> GetAllAdvisors()
@@ -155,7 +163,7 @@ namespace Advisor.API.Controller
             return Ok(res);
         }
 
-        [HttpPost("Advisor-change-password"), Authorize(Roles = "advisor")]
+        /*[HttpPost("Advisor-change-password"), Authorize(Roles = "advisor")]
         public async Task<ActionResult<string>> AdvisorChangePassword()
         {
             var email = _httpContext.HttpContext.User.FindFirstValue(ClaimTypes.Email);
@@ -167,9 +175,9 @@ namespace Advisor.API.Controller
             return Ok(res);
         }
 
-        /*[HttpPost("Reset-password/{token}")]*/
+        *//*[HttpPost("Reset-password/{token}")]*//*
         [HttpPost("Advisor-Reset-password-after-login"), Authorize(Roles = "advisor")]
-        /*public async Task<ActionResult<string>> ResetPassword(PasswordResetDTO reset, string token){*/
+        *//*public async Task<ActionResult<string>> ResetPassword(PasswordResetDTO reset, string token){*//*
         public async Task<ActionResult<string>> AdvisorResetPasswordLogin(PasswordResetDTO reset)
         {
             var email = _httpContext.HttpContext.User.FindFirstValue(ClaimTypes.Email);
@@ -177,7 +185,7 @@ namespace Advisor.API.Controller
             if (res.Equals("Session expired."))
                 return BadRequest(res);
             return Ok(res);
-        }
+        }*/
 
         /*[HttpPost("Reset-password/{token}")]*/
         [HttpPost("Advisor-Forgot-password-without-login")]
@@ -190,9 +198,9 @@ namespace Advisor.API.Controller
             return Ok(res);
         }
         [HttpPost("Advisor-Reset-password-without-login")]
-        public async Task<ActionResult<string>> AdvisorResetPassword(PasswordResetDTO request, string email)
+        public async Task<ActionResult<string>> AdvisorResetPassword(PasswordResetDTO request)
         {
-            var res = await _service.ResetPassword(request, email);
+            var res = await _service.ResetPassword(request);
             if (res.Equals("Session expired."))
                 return BadRequest(res);
             return Ok(res);
@@ -212,15 +220,10 @@ namespace Advisor.API.Controller
             return Ok(res);
         }
 
-        [HttpDelete("Delete-advisor"), Authorize(Roles = "advisor")]
-        public async Task<ActionResult<List<AdvisorInfoDTO>>> DeleteUser()
+        [HttpDelete("Delete-User"), Authorize(Roles = "advisor")]
+        public async Task<ActionResult<string>> DeleteUser(int id,string email)
         {
-            var result = string.Empty;
-            if (_httpContext.HttpContext != null)
-            {
-                result = _httpContext.HttpContext.User.FindFirstValue(ClaimTypes.Email);
-            }
-            var res = await _service.DeleteUser(result);
+            var res = await _service.DeleteUser(id,email);
             return Ok(res);
         }
     }
