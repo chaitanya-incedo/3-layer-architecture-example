@@ -54,6 +54,19 @@ namespace Advisor.Infrastructure.Repository
             
         }
 
+        public string DeleteInvestment(int strategyid)
+        {
+            var strategy=_context.InvestmentStrategies.FirstOrDefault(x=>x.InvestmentStrategyID==strategyid);
+            strategy.DeletedFlag = 1;
+            int id = strategy.InvestorInfoID;
+            var info = _context.InvestorInfos.FirstOrDefault(x => x.InvestorInfoID == id);
+            info.DeletedFlag = 1;
+            _context.InvestmentStrategies.Update(strategy);
+            _context.InvestorInfos.Update(info);
+            _context.SaveChanges(true);
+            return "deleted";
+        }
+
         public List<InvestmentDTO> GetInvestment(int InvestmentStrategyId)
         {
 
@@ -62,7 +75,10 @@ namespace Advisor.Infrastructure.Repository
             infos=_context.InvestorInfos.Where(x=>x.UserID==InvestmentStrategyId).ToList();
             List<InvestmentStrategy> strategies= new List<InvestmentStrategy>();
             foreach (var i in infos) {
-                strategies.Add(_context.InvestmentStrategies.First(x=>x.InvestorInfoID==i.InvestorInfoID));
+                var x = _context.InvestmentStrategies.First(x => x.InvestorInfoID == i.InvestorInfoID);
+                if (x.DeletedFlag == 1)
+                    continue;
+                strategies.Add(x);
             }
             List<InvestmentDTO> res= new List<InvestmentDTO>();
             foreach (var s in strategies) {
@@ -75,6 +91,7 @@ namespace Advisor.Infrastructure.Repository
                 ret.AccountID = strategy.AccountID;
                 ret.ModelAPLID = strategy.ModelAPLID;
                 ret.Active = info.Active;
+                ret.strategyid = strategy.InvestmentStrategyID;
                 ret.StrategyName = strategy.StrategyName;
                 ret.InvestmentAmount = strategy.InvestmentAmount;
                 res.Add(ret);

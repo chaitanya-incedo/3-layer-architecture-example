@@ -13,5 +13,6 @@ namespace Advisor.Core.Interfaces.Repositories
         InvestmentDTO CreateInvestment(InvestmentDTO request,string email);
         InvestmentDTO UpdateInvestment(InvestmentDTO request);
         List<InvestmentDTO> GetInvestment(int InvestmentStrategyId);
+        string DeleteInvestment(int strategyid);
     }
 }

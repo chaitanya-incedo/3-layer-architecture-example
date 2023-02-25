@@ -24,6 +24,12 @@ namespace Advisor.Core.Services
             return Task.FromResult(res);
         }
 
+        public Task<string> DeleteInvestment(int strategyid)
+        {
+            var res = _repository.DeleteInvestment(strategyid);
+            return Task.FromResult(res);
+        }
+
         public Task<List<InvestmentDTO>> GetInvestment(int InvestmentStrategyId)
         {
             var res = _repository.GetInvestment(InvestmentStrategyId);

@@ -45,5 +45,11 @@ namespace Advisor.API.Controller
             var res = await _service.UpdateInvestment(request);
             return Ok(res);
         }
+        [HttpDelete("delete"), Authorize(Roles = "advisor")]
+        public async Task<ActionResult<InvestmentDTO>> Delete(int request)
+        {
+            var res = await _service.DeleteInvestment(request);
+            return Ok(res);
+        }
     }
 }

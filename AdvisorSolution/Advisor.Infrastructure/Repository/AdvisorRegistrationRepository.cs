@@ -94,7 +94,7 @@ namespace Advisor.Infrastructure.Repository
         public string LoginAdvisor(AdvisorLoginDTO request)
         {
             var res = _context.Users.FirstOrDefault(X => X.Email == request.Email);
-            if (res is null)
+            if (res is null || res.DeletedFlag == 1)
                 return "Email doesn't exist.";
 
             if (!VerifyPasswordHash(request.Password, res.PasswordHash, res.PasswordSalt))
@@ -137,7 +137,7 @@ namespace Advisor.Infrastructure.Repository
         public string ChangePasswordAdv(string email)
         {
             var user = _context.Users.FirstOrDefault(x => x.Email == email);
-            if (user is null)
+            if (user is null || user.DeletedFlag==1)
             {
                 return "Bad Request.";
             }
@@ -170,7 +170,7 @@ namespace Advisor.Infrastructure.Repository
         {
             DateTime now=DateTime.Now;
             var user = _context.Users.FirstOrDefault(x => x.Email == request.Email);
-            if (user is null)
+            if (user is null || user.DeletedFlag==1)
                 return "No User with this email exists.";
             user.PasswordResetToken = CreateRandomToken();
             user.ResetTokenExpires = DateTime.Now.AddDays(1);
@@ -184,7 +184,7 @@ namespace Advisor.Infrastructure.Repository
         public AdvisorInfoDTO? GetAdvisorInfo(string email)
         {
             var user = _context.Users.FirstOrDefault(x => x.Email == email);
-            if (user is null)
+            if (user is null || user.DeletedFlag == 1)
                 return null;
             AdvisorInfoDTO advisorInfo = new AdvisorInfoDTO();
             advisorInfo.Email = email;
@@ -202,7 +202,7 @@ namespace Advisor.Infrastructure.Repository
         public AdvisorInfoDTO GetClientInfo(string id)
         {
             var user = _context.Users.FirstOrDefault(x => x.ClientID == id);
-            if (user is null)
+            if (user is null || user.DeletedFlag == 1)
                 return null;
             AdvisorInfoDTO advisorInfo = new AdvisorInfoDTO();
             advisorInfo.Email = user.Email;
@@ -276,6 +276,7 @@ namespace Advisor.Infrastructure.Repository
             List<AdvisorClient> clients = _context.AdvisorClients.Where(x => x.AdvisorId==advid).ToList();
             List<int> clientids = new List<int>();
             foreach (var x in clients) {
+                
                 clientids.Add(x.ClientId);
             }
             List<ClientInfoDto> list = new List<ClientInfoDto>();
