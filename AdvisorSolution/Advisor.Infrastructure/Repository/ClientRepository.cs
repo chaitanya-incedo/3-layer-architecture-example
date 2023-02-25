@@ -78,8 +78,8 @@ namespace Advisor.Infrastructure.Repository
 
         private string CreateAdvisorId()
         {
-            const string chars = "a1bc2de3fg5h6i7j4k8l9mn0opqrstuvwxyz";
-            var newId = new string(Enumerable.Repeat(chars, 6)
+            const string chars = "A1BC2DE3FG5H6I7J4K8L9MN0OPQRSTUVWXYZ";
+            var newId = "C" + new string(Enumerable.Repeat(chars, 5)
                 .Select(s => s[random.Next(s.Length)]).ToArray());
             var res = _context.Users.Any(u => u.AdvisorID == newId);
             if (res == true)

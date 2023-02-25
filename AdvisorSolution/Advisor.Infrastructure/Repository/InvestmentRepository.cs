@@ -4,6 +4,7 @@ using Advisor.Core.Interfaces.Repositories;
 using Advisor.Infrastructure.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Math.EC.Rfc7748;
 
 namespace Advisor.Infrastructure.Repository
 {
@@ -22,7 +23,6 @@ namespace Advisor.Infrastructure.Repository
             var advisor = _context.Users.First(X => X.Email == email);
 
             InvestmentStrategy strategy = new InvestmentStrategy();
-            InvestmentType type=new InvestmentType();
             InvestorInfo info=new InvestorInfo();
 
             info.UserID=request.UserID;
@@ -35,16 +35,8 @@ namespace Advisor.Infrastructure.Repository
             _context.InvestorInfos.Add(info);
             _context.SaveChanges();
 
-            type.InvestmentTypeName=request.InvestmentTypeName;
-            type.CreatedDate=DateTime.Now;
-            type.ModifiedDate=DateTime.Now;
-            type.ModifiedBy=advisor.AdvisorID;
-            type.DeletedFlag= 0;
-            _context.InvestmentTypes.Add(type);
-            _context.SaveChanges();
-
-            InvestmentType type1 = _context.InvestmentTypes.First(x=>x.InvestmentTypeName==request.InvestmentTypeName);
-            InvestorInfo info1 = _context.InvestorInfos.First(s => s.UserID == request.UserID);
+            var type = _context.InvestmentTypes.First(x => x.InvestmentTypeName == request.InvestmentTypeName);
+            
 
             strategy.ModifiedDate=DateTime.Now;
             strategy.DeletedFlag= 0;
@@ -53,8 +45,8 @@ namespace Advisor.Infrastructure.Repository
             strategy.ModelAPLID=request.ModelAPLID;
             strategy.AccountID=request.AccountID;
             strategy.StrategyName=request.StrategyName;
-            strategy.InvestmentTypeID = type1.InvestmentTypeID;
-            strategy.InvestorInfoID=info1.InvestorInfoID;
+            strategy.InvestmentTypeID = type.InvestmentTypeID;
+            strategy.InvestorInfoID=info.InvestorInfoID;
             _context.InvestmentStrategies.Add(strategy);
             _context.SaveChanges();
 
@@ -62,20 +54,48 @@ namespace Advisor.Infrastructure.Repository
             
         }
 
-/*        public List<InvestmentStrategy>? GetInvestment(int InvestmentStrategyId)
+        public List<InvestmentDTO> GetInvestment(int InvestmentStrategyId)
         {
-            if (!(_context.InvestmentStrategies.Any(X => X.InvestmentStrategyID == InvestmentStrategyId)))
-                return null;
-            InvestmentDTO ret = new InvestmentDTO();
 
-            var pg = _context.InvestmentStrategies.Where(c => c.InvestmentStrategyID == InvestmentStrategyId).Include(c=>c.InvestorInfo).Include(c=>c.InvestmentTypes);
-            ret.AccountID=p
-        }*/
+            List<int> infoIDS= new List<int>();
+            List<InvestorInfo> infos= new List<InvestorInfo>();
+            infos=_context.InvestorInfos.Where(x=>x.UserID==InvestmentStrategyId).ToList();
+            List<InvestmentStrategy> strategies= new List<InvestmentStrategy>();
+            foreach (var i in infos) {
+                strategies.Add(_context.InvestmentStrategies.First(x=>x.InvestorInfoID==i.InvestorInfoID));
+            }
+            List<InvestmentDTO> res= new List<InvestmentDTO>();
+            foreach (var s in strategies) {
+                var strategy = _context.InvestmentStrategies.FirstOrDefault(X => X.InvestmentStrategyID == s.InvestmentStrategyID);
+                var info = _context.InvestorInfos.FirstOrDefault(X => X.InvestorInfoID == strategy.InvestorInfoID);
+                var type = _context.InvestmentTypes.FirstOrDefault(X => X.InvestmentTypeID == strategy.InvestmentTypeID);
+                InvestmentDTO ret = new InvestmentDTO();
+                ret.InvestmentName = info.InvestmentName;
+                ret.InvestmentTypeName = type.InvestmentTypeName;
+                ret.AccountID = strategy.AccountID;
+                ret.ModelAPLID = strategy.ModelAPLID;
+                ret.Active = info.Active;
+                ret.StrategyName = strategy.StrategyName;
+                ret.InvestmentAmount = strategy.InvestmentAmount;
+                res.Add(ret);
+            }
+            return res;
+        }
 
-        public InvestmentDTO UpdateInvestment(int infoid,int typeid,int strategyid, InvestmentDTO request)
+        public InvestmentDTO UpdateInvestment(InvestmentDTO request)
         {
-            var oldinfo = _context.InvestorInfos.FirstOrDefault(X => X.InvestorInfoID == infoid);
+            var oldstrategy = _context.InvestmentStrategies.FirstOrDefault(x => x.InvestmentStrategyID == request.strategyid);
             var time = DateTime.Now;
+            oldstrategy.ModifiedDate = time;
+            oldstrategy.DeletedFlag = 0;
+            oldstrategy.InvestmentAmount = request.InvestmentAmount;
+            oldstrategy.ModelAPLID = request.ModelAPLID;
+            oldstrategy.AccountID = request.AccountID;
+            oldstrategy.StrategyName = request.StrategyName;
+            var newtype = _context.InvestmentTypes.FirstOrDefault(X => X.InvestmentTypeName == request.InvestmentTypeName);
+            oldstrategy.InvestmentTypeID = newtype.InvestmentTypeID;
+
+            var oldinfo = _context.InvestorInfos.FirstOrDefault(X => X.InvestorInfoID == oldstrategy.InvestorInfoID);
 
             oldinfo.InvestmentName = request.InvestmentName;
             oldinfo.Active = request.Active;
@@ -83,27 +103,7 @@ namespace Advisor.Infrastructure.Repository
             oldinfo.DeletedFlag = 0;
             _context.InvestorInfos.Update(oldinfo);
             _context.SaveChanges();
-
-            var oldtype = _context.InvestmentTypes.FirstOrDefault(X => X.InvestmentTypeID == typeid);
-            oldtype.InvestmentTypeName = request.InvestmentTypeName;
-            oldtype.ModifiedDate = time;
-            oldtype.DeletedFlag = 0;
-            _context.InvestmentTypes.Update(oldtype);
-            _context.SaveChanges();
-
-            InvestmentType type1 = _context.InvestmentTypes.First(x => x.InvestmentTypeID == typeid);
-            InvestorInfo info1 = _context.InvestorInfos.First(s => s.InvestorInfoID == infoid);
-
-            var oldstrategy = _context.InvestmentStrategies.FirstOrDefault(x => x.InvestmentStrategyID == strategyid);
-
-            oldstrategy.ModifiedDate = time;
-            oldstrategy.DeletedFlag = 0;
-            oldstrategy.InvestmentAmount = request.InvestmentAmount;
-            oldstrategy.ModelAPLID = request.ModelAPLID;
-            oldstrategy.AccountID = request.AccountID;
-            oldstrategy.StrategyName = request.StrategyName;
-            oldstrategy.InvestmentTypeID = type1.InvestmentTypeID;
-            oldstrategy.InvestorInfoID = info1.InvestorInfoID;
+     
             _context.InvestmentStrategies.Update(oldstrategy);
             _context.SaveChanges();
 

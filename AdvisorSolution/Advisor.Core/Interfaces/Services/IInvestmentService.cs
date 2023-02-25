@@ -11,7 +11,7 @@ namespace Advisor.Core.Interfaces.Services
     public interface IInvestmentService
     {
         Task<InvestmentDTO> CreateInvestment(InvestmentDTO request,string email);
-        Task<InvestmentDTO> UpdateInvestment(int infoid, int typeid, int strategyid, InvestmentDTO request);
-/*        Task<List<InvestmentStrategy>?> GetInvestment(int InvestmentStrategyId);
-*/    }
+        Task<InvestmentDTO> UpdateInvestment(InvestmentDTO request);
+        Task<List<InvestmentDTO>> GetInvestment(int InvestmentStrategyId);
+    }
 }

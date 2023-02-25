@@ -58,11 +58,23 @@ namespace Advisor.Infrastructure.Repository
             _context.SaveChanges();
             return request;
         }
-
+                                                                            
+                                                                            private string CreateClientId()
+                                                                            {
+                                                                                const string chars = "A1BC2DE3FG5H6I7J4K8L9MN0OPQRSTUVWXYZ";
+                                                                                var newId = "C" + new string(Enumerable.Repeat(chars, 5)
+                                                                                    .Select(s => s[random.Next(s.Length)]).ToArray());
+                                                                                var res = _context.Users.Any(u => u.AdvisorID == newId);
+                                                                                if (res == true)
+                                                                                {
+                                                                                    CreateClientId();
+                                                                                }
+                                                                                return newId;
+                                                                            }
                                                                             private string CreateAdvisorId()
                                                                             {
-                                                                                const string chars = "a1bc2de3fg5h6i7j4k8l9mn0opqrstuvwxyz";
-                                                                                var newId = new string(Enumerable.Repeat(chars, 6)
+                                                                                const string chars = "A1BC2DE3FG5H6I7J4K8L9MN0OPQRSTUVWXYZ";
+                                                                                var newId = "A" + new string(Enumerable.Repeat(chars, 5)
                                                                                     .Select(s => s[random.Next(s.Length)]).ToArray());
                                                                                 var res = _context.Users.Any(u => u.AdvisorID == newId);
                                                                                 if (res == true)
@@ -92,7 +104,7 @@ namespace Advisor.Infrastructure.Repository
         {
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
-            var cliId = CreateAdvisorId();
+            var cliId = CreateClientId();
             var res = _context.Users.FirstOrDefault(X => X.AdvisorID == email);
             var advId = res.AdvisorID;
             var advuserid = res.UserID;

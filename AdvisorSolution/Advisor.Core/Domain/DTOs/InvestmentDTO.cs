@@ -14,6 +14,7 @@ namespace Advisor.Core.Domain.DTOs
         //-------------------------------------------------------------
         public string? InvestmentTypeName { get; set; }
         //-------------------------------------------------------------
+        public int strategyid { get; set; }
         public string? StrategyName { get; set; }
         public string? AccountID { get; set; }
         public string? ModelAPLID { get; set; }

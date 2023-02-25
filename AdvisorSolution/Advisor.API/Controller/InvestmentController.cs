@@ -30,18 +30,19 @@ namespace Advisor.API.Controller
             return Ok(res);
         }
 
-        /*        [HttpGet("GetInvestmentInformation"), Authorize(Roles = "advisor")]
-                public async Task<ActionResult<InvestmentDTO>> GetInvestment(int InvestmentStrategyId) {
-                    var res = await _service.GetInvestment(InvestmentStrategyId);
-                    if (res is null)
-                        return NotFound();
-                    return Ok(res);
-                }*/
+        [HttpGet("GetInvestmentInformation"), Authorize(Roles = "advisor")]
+        public async Task<ActionResult<List<InvestmentDTO>>> GetInvestment(int InvestmentStrategyId)
+        {
+            var res = await _service.GetInvestment(InvestmentStrategyId);
+            if (res is null)
+                return NotFound();
+            return Ok(res);
+        }
 
         [HttpPut("update"), Authorize(Roles = "advisor")]
-        public async Task<ActionResult<InvestmentDTO>> Update(int infoid, int typeid, int strategyid, InvestmentDTO request)
+        public async Task<ActionResult<InvestmentDTO>> Update(InvestmentDTO request)
         {
-            var res = await _service.UpdateInvestment(infoid,typeid,strategyid,request);
+            var res = await _service.UpdateInvestment(request);
             return Ok(res);
         }
     }

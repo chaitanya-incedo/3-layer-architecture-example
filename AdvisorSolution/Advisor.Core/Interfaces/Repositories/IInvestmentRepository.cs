@@ -11,7 +11,7 @@ namespace Advisor.Core.Interfaces.Repositories
     public interface IInvestmentRepository
     {
         InvestmentDTO CreateInvestment(InvestmentDTO request,string email);
-        InvestmentDTO UpdateInvestment(int infoid, int typeid, int strategyid, InvestmentDTO request);
-/*        List<InvestmentStrategy>? GetInvestment(int InvestmentStrategyId);*/
+        InvestmentDTO UpdateInvestment(InvestmentDTO request);
+        List<InvestmentDTO> GetInvestment(int InvestmentStrategyId);
     }
 }

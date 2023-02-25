@@ -24,15 +24,15 @@ namespace Advisor.Core.Services
             return Task.FromResult(res);
         }
 
-/*        public Task<List<InvestmentStrategy>?> GetInvestment(int InvestmentStrategyId)
+        public Task<List<InvestmentDTO>> GetInvestment(int InvestmentStrategyId)
         {
             var res = _repository.GetInvestment(InvestmentStrategyId);
             return Task.FromResult(res);
-        }*/
+        }
 
-        public Task<InvestmentDTO> UpdateInvestment(int infoid, int typeid, int strategyid, InvestmentDTO request)
+        public Task<InvestmentDTO> UpdateInvestment(InvestmentDTO request)
         {
-            var res = _repository.UpdateInvestment(infoid,typeid,strategyid,request);
+            var res = _repository.UpdateInvestment(request);
             return Task.FromResult(res);
         }
     }
