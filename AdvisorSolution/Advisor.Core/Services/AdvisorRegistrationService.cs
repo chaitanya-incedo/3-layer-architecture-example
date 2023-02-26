@@ -69,9 +69,9 @@ namespace Advisor.Core.Services
             return Task.FromResult(_repository.UpdateAdvisor(email, info));
         }
 
-        public Task<string> DeleteUser(int id,string email)
+        public Task<string> DeleteUser(string id)
         {
-            return Task.FromResult(_repository.DeleteUser(id,email));
+            return Task.FromResult(_repository.DeleteUser(id));
         }
 
         public Task<List<ClientInfoDto>> GetAllClientsForAnAdvisor(string email)

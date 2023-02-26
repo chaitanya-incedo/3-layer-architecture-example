@@ -36,6 +36,12 @@ namespace Advisor.Core.Services
             return Task.FromResult(res);
         }
 
+        public Task<decimal> GetTotal(string clientID)
+        {
+            var res = _repository.GetTotal(clientID);
+            return Task.FromResult(res);
+        }
+
         public Task<InvestmentDTO> UpdateInvestment(InvestmentDTO request)
         {
             var res = _repository.UpdateInvestment(request);

@@ -73,8 +73,11 @@ namespace Advisor.Infrastructure.Repository
             List<int> infoIDS= new List<int>();
             List<InvestorInfo> infos= new List<InvestorInfo>();
             infos=_context.InvestorInfos.Where(x=>x.UserID==InvestmentStrategyId).ToList();
+
             List<InvestmentStrategy> strategies= new List<InvestmentStrategy>();
             foreach (var i in infos) {
+                Console.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+                Console.WriteLine(i.InvestorInfoID);
                 var x = _context.InvestmentStrategies.First(x => x.InvestorInfoID == i.InvestorInfoID);
                 if (x.DeletedFlag == 1)
                     continue;
@@ -97,6 +100,22 @@ namespace Advisor.Infrastructure.Repository
                 res.Add(ret);
             }
             return res;
+        }
+
+        public decimal GetTotal(string clientID)
+        {
+            int userid = _context.Users.First(x => x.ClientID == clientID).UserID;
+            List<InvestorInfo> infos=_context.InvestorInfos.Where(x=>x.UserID==userid).ToList();
+            decimal total = 0;
+            foreach (var i in infos) {
+                if (i.DeletedFlag == 1)
+                    continue;
+                var strat = _context.InvestmentStrategies.First(x => x.InvestorInfoID == i.InvestorInfoID);
+                if (strat.DeletedFlag == 1)
+                    continue;
+                total += strat.InvestmentAmount;
+            }
+            return total;
         }
 
         public InvestmentDTO UpdateInvestment(InvestmentDTO request)

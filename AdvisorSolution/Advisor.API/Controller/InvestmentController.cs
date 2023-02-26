@@ -31,11 +31,17 @@ namespace Advisor.API.Controller
         }
 
         [HttpGet("GetInvestmentInformation"), Authorize(Roles = "advisor")]
-        public async Task<ActionResult<List<InvestmentDTO>>> GetInvestment(int InvestmentStrategyId)
+        public async Task<ActionResult<List<InvestmentDTO>>> GetInvestment(int userid)
         {
-            var res = await _service.GetInvestment(InvestmentStrategyId);
+            var res = await _service.GetInvestment(userid);
             if (res is null)
                 return NotFound();
+            return Ok(res);
+        }
+        [HttpGet("GetTotalInvestment"), Authorize(Roles = "advisor")]
+        public async Task<ActionResult<List<InvestmentDTO>>> GetTotal(string clientID)
+        {
+            var res = await _service.GetTotal(clientID);
             return Ok(res);
         }
 

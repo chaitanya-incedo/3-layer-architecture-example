@@ -259,9 +259,9 @@ namespace Advisor.Infrastructure.Repository
             return advisorInfo;
         }
 
-        public string DeleteUser(int id,string email)
+        public string DeleteUser(string id)
         {
-            var user = _context.Users.FirstOrDefault(x => x.UserID == id);
+            var user = _context.Users.FirstOrDefault(x => x.ClientID == id);
             user.DeletedFlag = 1;
             user.Active = 0;
             _context.Update(user);

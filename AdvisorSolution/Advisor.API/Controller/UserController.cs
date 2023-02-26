@@ -221,9 +221,9 @@ namespace Advisor.API.Controller
         }
 
         [HttpDelete("Delete-User"), Authorize(Roles = "advisor")]
-        public async Task<ActionResult<string>> DeleteUser(int id,string email)
+        public async Task<ActionResult<string>> DeleteUser(string id)
         {
-            var res = await _service.DeleteUser(id,email);
+            var res = await _service.DeleteUser(id);
             return Ok(res);
         }
     }
