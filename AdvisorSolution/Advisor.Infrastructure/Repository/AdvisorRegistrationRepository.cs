@@ -152,6 +152,9 @@ namespace Advisor.Infrastructure.Repository
         public string ResetPasswordAdvAfterLogin(PasswordResetDTO reset)
         {
             var user = _context.Users.FirstOrDefault(x => x.Email == reset.email);
+            if (user == null || user.DeletedFlag == 1)
+                return "user doesnt exist";
+
             if (DateTime.Now > user.ResetTokenExpires)
                 return "Session expired.";
 

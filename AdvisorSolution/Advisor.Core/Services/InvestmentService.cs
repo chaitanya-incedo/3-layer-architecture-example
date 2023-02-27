@@ -30,7 +30,7 @@ namespace Advisor.Core.Services
             return Task.FromResult(res);
         }
 
-        public Task<List<InvestmentDTO>> GetInvestment(int InvestmentStrategyId)
+        public Task<List<InvestmentDTO>> GetInvestment(string InvestmentStrategyId)
         {
             var res = _repository.GetInvestment(InvestmentStrategyId);
             return Task.FromResult(res);

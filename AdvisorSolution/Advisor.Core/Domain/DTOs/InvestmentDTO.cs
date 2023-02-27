@@ -8,7 +8,7 @@ namespace Advisor.Core.Domain.DTOs
 {
     public class InvestmentDTO
     {
-        public int UserID { get; set; }
+        public string clientID { get; set; }
         public string? InvestmentName { get; set; }
         public int Active { get; set; }
         //-------------------------------------------------------------

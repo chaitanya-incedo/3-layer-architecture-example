@@ -152,7 +152,6 @@ namespace Advisor.Infrastructure.Repository
             user.Email = clientInfo.Email;
             user.LastName = clientInfo.LastName;
             user.FirstName = clientInfo.FirstName;
-            user.AdvisorID = clientInfo.AdvisorID;
             user.Address = clientInfo.Address;
             user.City = clientInfo.City;
             user.SortName = clientInfo.LastName + ", " + clientInfo.FirstName;

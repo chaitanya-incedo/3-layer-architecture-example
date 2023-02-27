@@ -31,9 +31,9 @@ namespace Advisor.API.Controller
         }
 
         [HttpGet("GetInvestmentInformation"), Authorize(Roles = "advisor")]
-        public async Task<ActionResult<List<InvestmentDTO>>> GetInvestment(int userid)
+        public async Task<ActionResult<List<InvestmentDTO>>> GetInvestment(string clientid)
         {
-            var res = await _service.GetInvestment(userid);
+            var res = await _service.GetInvestment(clientid);
             if (res is null)
                 return NotFound();
             return Ok(res);

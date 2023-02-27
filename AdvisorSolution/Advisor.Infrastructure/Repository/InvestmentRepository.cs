@@ -24,8 +24,8 @@ namespace Advisor.Infrastructure.Repository
 
             InvestmentStrategy strategy = new InvestmentStrategy();
             InvestorInfo info=new InvestorInfo();
-
-            info.UserID=request.UserID;
+            var client = _context.Users.First(x => x.ClientID == request.clientID);
+            info.UserID=client.UserID;
             info.InvestmentName=request.InvestmentName;
             info.Active=request.Active;
             info.CreatedDate=DateTime.Now;
@@ -67,12 +67,12 @@ namespace Advisor.Infrastructure.Repository
             return "deleted";
         }
 
-        public List<InvestmentDTO> GetInvestment(int InvestmentStrategyId)
+        public List<InvestmentDTO> GetInvestment(string clientid)
         {
-
+            var client = _context.Users.First(x => x.ClientID == clientid);
             List<int> infoIDS= new List<int>();
             List<InvestorInfo> infos= new List<InvestorInfo>();
-            infos=_context.InvestorInfos.Where(x=>x.UserID==InvestmentStrategyId).ToList();
+            infos=_context.InvestorInfos.Where(x=>x.UserID==client.UserID).ToList();
 
             List<InvestmentStrategy> strategies= new List<InvestmentStrategy>();
             foreach (var i in infos) {
