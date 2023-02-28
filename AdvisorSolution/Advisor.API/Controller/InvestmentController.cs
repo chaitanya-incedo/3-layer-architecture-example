@@ -38,6 +38,7 @@ namespace Advisor.API.Controller
                 return NotFound();
             return Ok(res);
         }
+
         [HttpGet("GetTotalInvestment"), Authorize(Roles = "advisor")]
         public async Task<ActionResult<List<InvestmentDTO>>> GetTotal(string clientID)
         {

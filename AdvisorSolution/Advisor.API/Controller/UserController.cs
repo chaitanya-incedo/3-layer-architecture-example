@@ -72,14 +72,7 @@ namespace Advisor.API.Controller
                                     return Ok(res);
                                 }*/
 
-                                [HttpPut("Update-client-personal-info"), Authorize(Roles = "advisor")]
-                                public async Task<ActionResult<AdvisorInfoDTO>> UpdateClient(AdvisorInfoDTO info, string ClientId)
-                                {
-                                    AdvisorInfoDTO res = await _clientService.UpdateClient(info, ClientId);
-                                    if (res is null)
-                                        return NoContent();
-                                    return Ok(res);
-                                }
+                                
 
         [HttpGet("Get-All-Clients-for-an-advisor"), Authorize(Roles = "advisor")]
         public async Task<ActionResult<List<AdvisorInfoDTO>>> GetAllClientsForAnAdvisor()
@@ -215,6 +208,14 @@ namespace Advisor.API.Controller
                 result = _httpContext.HttpContext.User.FindFirstValue(ClaimTypes.Email);
             }
             AdvisorInfoDTO res = await _service.UpdateAdvisor(result, info);
+            if (res is null)
+                return NoContent();
+            return Ok(res);
+        }
+        [HttpPut("Update-client-personal-info"), Authorize(Roles = "advisor")]
+        public async Task<ActionResult<AdvisorInfoDTO>> UpdateClient(AdvisorInfoDTO info, string ClientId)
+        {
+            AdvisorInfoDTO res = await _clientService.UpdateClient(info, ClientId);
             if (res is null)
                 return NoContent();
             return Ok(res);
