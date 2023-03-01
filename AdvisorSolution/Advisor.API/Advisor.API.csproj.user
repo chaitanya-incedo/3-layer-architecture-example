@@ -4,5 +4,9 @@
     <Controller_SelectedScaffolderID>ApiControllerEmptyScaffolder</Controller_SelectedScaffolderID>
     <Controller_SelectedScaffolderCategoryPath>root/Common/Api</Controller_SelectedScaffolderCategoryPath>
     <NameOfLastUsedPublishProfile>C:\Users\chaitanya.sharma2\Desktop\investment management platform\Advisor\AdvisorSolution\Advisor.API\Properties\PublishProfiles\dev-advisors - Web Deploy.pubxml</NameOfLastUsedPublishProfile>
+    <ActiveDebugProfile>Advisor.API</ActiveDebugProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>
   </PropertyGroup>
 </Project>

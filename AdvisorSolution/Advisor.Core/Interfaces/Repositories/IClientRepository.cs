@@ -11,6 +11,6 @@ namespace Advisor.Core.Interfaces.Repositories
     {
         AdvisorRegisterDTO? CreateClient(AdvisorRegisterDTO request, string email);
         string LoginClient(AdvisorLoginDTO request);
-        AdvisorInfoDTO? UpdateClient(AdvisorInfoDTO info, string ClientId);
+        AdvisorInfoDTO? UpdateClient(AdvisorInfoDTO info);
     }
 }

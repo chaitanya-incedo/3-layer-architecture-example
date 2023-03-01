@@ -69,7 +69,7 @@ namespace Advisor.Infrastructure.Repository
             var res = _context.Users.Any(u => u.AdvisorID == newId);
             if (res == true)
             {
-                CreateAdvisorId();
+                return CreateAdvisorId();
             }
             return newId;
         }
@@ -247,7 +247,7 @@ namespace Advisor.Infrastructure.Repository
         public AdvisorInfoDTO UpdateAdvisor(string email, AdvisorInfoDTO advisorInfo)
         {
             var user = _context.Users.FirstOrDefault(x => x.Email == email);
-            user.Email = advisorInfo.Email;
+            
             user.LastName = advisorInfo.LastName;
             user.FirstName = advisorInfo.FirstName;
             user.AdvisorID = advisorInfo.AdvisorID;

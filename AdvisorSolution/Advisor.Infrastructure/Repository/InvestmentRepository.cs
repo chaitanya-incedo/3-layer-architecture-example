@@ -5,6 +5,7 @@ using Advisor.Infrastructure.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Math.EC.Rfc7748;
+using System;
 
 namespace Advisor.Infrastructure.Repository
 {
@@ -12,11 +13,22 @@ namespace Advisor.Infrastructure.Repository
     {
         private readonly AdvisorDbContext _context;
         private readonly IHttpContextAccessor _httpContext;
+        private static Random random = new Random();
 
         public InvestmentRepository(AdvisorDbContext context, IHttpContextAccessor httpContext)
         {
             _context=context;
             _httpContext = httpContext;
+        }
+        public string AccountIDGenerator() {
+            const string chars = "A1BC2DE3FG5H6I7J4K8L9MN0OPQRSTUVWXYZ";
+            var newId = "A" + new string(Enumerable.Repeat(chars, 5).Select(s => s[random.Next(s.Length)]).ToArray());
+            var res = _context.InvestmentStrategies.Any(u => u.AccountID == newId);
+            if (res == true)
+            {
+                return AccountIDGenerator();
+            }
+            return newId;
         }
         public InvestmentDTO CreateInvestment(InvestmentDTO request,string email)
         {
@@ -24,6 +36,7 @@ namespace Advisor.Infrastructure.Repository
 
             InvestmentStrategy strategy = new InvestmentStrategy();
             InvestorInfo info=new InvestorInfo();
+
             var client = _context.Users.First(x => x.ClientID == request.clientID);
             info.UserID=client.UserID;
             info.InvestmentName=request.InvestmentName;
@@ -43,7 +56,7 @@ namespace Advisor.Infrastructure.Repository
             strategy.ModifiedBy= advisor.AdvisorID;
             strategy.InvestmentAmount=request.InvestmentAmount;
             strategy.ModelAPLID=request.ModelAPLID;
-            strategy.AccountID=request.AccountID;
+            strategy.AccountID = AccountIDGenerator();
             strategy.StrategyName=request.StrategyName;
             strategy.InvestmentTypeID = type.InvestmentTypeID;
             strategy.InvestorInfoID=info.InvestorInfoID;

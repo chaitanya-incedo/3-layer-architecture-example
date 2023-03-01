@@ -45,6 +45,33 @@ namespace Advisor.API.Controller
             }
             
         }
+        [HttpPost("AdvisorLogin")]
+        public async Task<ActionResult<string>> AdvisorLogin(AdvisorLoginDTO request)
+        {
+            var res = await _service.LoginAdvisor(request);
+            if (res.Equals("Email doesn't exist.") || res.Equals("Wrong password."))
+                return BadRequest(res);
+
+            return Ok(res);
+        }
+        /*[HttpPost("Reset-password/{token}")]*/
+        [HttpPost("AdvisorForgot")]
+        /*public async Task<ActionResult<string>> ResetPassword(PasswordResetDTO reset, string token){*/
+        public async Task<ActionResult<string>> AdvisorForgotPassword(PasswordResetWithoutLoginDTO reset)
+        {
+            var res = await _service.ForgotPassword(reset);
+            if (res.Equals("Session expired."))
+                return BadRequest(res);
+            return Ok(res);
+        }
+        [HttpPost("AdvisorReset")]
+        public async Task<ActionResult<string>> AdvisorResetPassword(PasswordResetDTO request)
+        {
+            var res = await _service.ResetPassword(request);
+            if (res.Equals("Session expired."))
+                return BadRequest(res);
+            return Ok(res);
+        }
 
 
 
@@ -52,29 +79,29 @@ namespace Advisor.API.Controller
 
 
 
-/*                                [HttpPost("ClientRegister"), Authorize(Roles = "advisor")]
-                                public async Task<ActionResult<AdvisorRegisterDTO>> ClientRegister(AdvisorRegisterDTO request)
-                                {
-                                    var email = _httpContext.HttpContext.User.FindFirstValue(ClaimTypes.Email);
-                                    var res = await _clientService.CreateClient(request,email);
-                                    if (res == null)
-                                        return BadRequest("User already Exists.");
-                                    return Ok(res);
-                                }*/
+        /*                                [HttpPost("ClientRegister"), Authorize(Roles = "advisor")]
+                                        public async Task<ActionResult<AdvisorRegisterDTO>> ClientRegister(AdvisorRegisterDTO request)
+                                        {
+                                            var email = _httpContext.HttpContext.User.FindFirstValue(ClaimTypes.Email);
+                                            var res = await _clientService.CreateClient(request,email);
+                                            if (res == null)
+                                                return BadRequest("User already Exists.");
+                                            return Ok(res);
+                                        }*/
 
-                                /*[HttpPost("ClientLogin")]
-                                public async Task<ActionResult<string>> ClientLogin(AdvisorLoginDTO request)
-                                {
-                                    var res = await _clientService.LoginClient(request);
-                                    if (res.Equals("Email doesn't exist.") || res.Equals("Wrong password."))
-                                        return BadRequest(res);
+        /*[HttpPost("ClientLogin")]
+        public async Task<ActionResult<string>> ClientLogin(AdvisorLoginDTO request)
+        {
+            var res = await _clientService.LoginClient(request);
+            if (res.Equals("Email doesn't exist.") || res.Equals("Wrong password."))
+                return BadRequest(res);
 
-                                    return Ok(res);
-                                }*/
+            return Ok(res);
+        }*/
 
-                                
 
-        [HttpGet("Get-All-Clients-for-an-advisor"), Authorize(Roles = "advisor")]
+
+        [HttpGet("GetAllClients"), Authorize(Roles = "advisor")]
         public async Task<ActionResult<List<AdvisorInfoDTO>>> GetAllClientsForAnAdvisor()
         {
             var result = string.Empty;
@@ -107,7 +134,7 @@ namespace Advisor.API.Controller
                     return Ok(result);
                 }*/
 
-        [HttpGet("Advisor-Info"), Authorize(Roles = "advisor")]
+        [HttpGet("AdvisorInfo"), Authorize(Roles = "advisor")]
         public async Task<ActionResult<AdvisorInfoDTO?>> GetAdvisorInfo()
         {
 
@@ -122,7 +149,7 @@ namespace Advisor.API.Controller
                 return NoContent();
             return Ok(res);
         }
-        [HttpGet("client-Info"), Authorize(Roles = "advisor")]
+        [HttpGet("clientInfo"), Authorize(Roles = "advisor")]
         public async Task<ActionResult<AdvisorInfoDTO?>> GetClientInfo(string id)
         {
             AdvisorInfoDTO res = await _service.GetClientInfo(id);
@@ -131,7 +158,7 @@ namespace Advisor.API.Controller
             return Ok(res);
         }
 
-        [HttpGet("Get-All-Advisors"), Authorize(Roles = "advisor")]
+        [HttpGet("GetAllAdvisors"), Authorize(Roles = "advisor")]
         public async Task<ActionResult<List<AdvisorInfoDTO>>> GetAllAdvisors()
         {
             return Ok(await _service.GetAllAdvisors());
@@ -146,15 +173,7 @@ namespace Advisor.API.Controller
             return Ok(res);
         }*/
 
-        [HttpPost("AdvisorLogin")]
-        public async Task<ActionResult<string>> AdvisorLogin(AdvisorLoginDTO request)
-        {
-            var res = await _service.LoginAdvisor(request);
-            if (res.Equals("Email doesn't exist.") || res.Equals("Wrong password."))
-                return BadRequest(res);
-
-            return Ok(res);
-        }
+        
 
         /*[HttpPost("Advisor-change-password"), Authorize(Roles = "advisor")]
         public async Task<ActionResult<string>> AdvisorChangePassword()
@@ -180,48 +199,35 @@ namespace Advisor.API.Controller
             return Ok(res);
         }*/
 
-        /*[HttpPost("Reset-password/{token}")]*/
-        [HttpPost("Advisor-Forgot-password-without-login")]
-        /*public async Task<ActionResult<string>> ResetPassword(PasswordResetDTO reset, string token){*/
-        public async Task<ActionResult<string>> AdvisorForgotPassword(PasswordResetWithoutLoginDTO reset)
-        {
-            var res = await _service.ForgotPassword(reset);
-            if (res.Equals("Session expired."))
-                return BadRequest(res);
-            return Ok(res);
-        }
-        [HttpPost("Advisor-Reset-password-without-login")]
-        public async Task<ActionResult<string>> AdvisorResetPassword(PasswordResetDTO request)
-        {
-            var res = await _service.ResetPassword(request);
-            if (res.Equals("Session expired."))
-                return BadRequest(res);
-            return Ok(res);
-        }
+       
 
-        [HttpPut("Update-advisor"), Authorize(Roles = "advisor")]
-        public async Task<ActionResult<AdvisorInfoDTO>> UpdateAdvisor(AdvisorInfoDTO info)
+        [HttpPut("Update"), Authorize(Roles = "advisor")]
+        public async Task<ActionResult<AdvisorInfoDTO>> Update(AdvisorInfoDTO info)
         {
-            var result = string.Empty;
-            if (_httpContext.HttpContext != null)
+            if (info.AdvisorID[0] == 'A')
             {
-                result = _httpContext.HttpContext.User.FindFirstValue(ClaimTypes.Email);
+                var result = string.Empty;
+                if (_httpContext.HttpContext != null)
+                {
+                    result = _httpContext.HttpContext.User.FindFirstValue(ClaimTypes.Email);
+                }
+                Console.WriteLine(result);
+                AdvisorInfoDTO res = await _service.UpdateAdvisor(result, info);
+                if (res is null)
+                    return NoContent();
+                return Ok(res);
             }
-            AdvisorInfoDTO res = await _service.UpdateAdvisor(result, info);
-            if (res is null)
-                return NoContent();
-            return Ok(res);
+            else {
+                AdvisorInfoDTO res = await _clientService.UpdateClient(info);
+                if (res is null)
+                    return NoContent();
+                return Ok(res);
+            }
         }
-        [HttpPut("Update-client-personal-info"), Authorize(Roles = "advisor")]
-        public async Task<ActionResult<AdvisorInfoDTO>> UpdateClient(AdvisorInfoDTO info, string ClientId)
-        {
-            AdvisorInfoDTO res = await _clientService.UpdateClient(info, ClientId);
-            if (res is null)
-                return NoContent();
-            return Ok(res);
-        }
+       
+        
 
-        [HttpDelete("Delete-User"), Authorize(Roles = "advisor")]
+        [HttpDelete("Delete"), Authorize(Roles = "advisor")]
         public async Task<ActionResult<string>> DeleteUser(string id)
         {
             var res = await _service.DeleteUser(id);

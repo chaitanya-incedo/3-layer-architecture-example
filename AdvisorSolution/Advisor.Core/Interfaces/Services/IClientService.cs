@@ -11,6 +11,6 @@ namespace Advisor.Core.Interfaces.Services
     {
         Task<AdvisorRegisterDTO?> CreateClient(AdvisorRegisterDTO request, string email);
         Task<string> LoginClient(AdvisorLoginDTO request);
-        Task<AdvisorInfoDTO?> UpdateClient(AdvisorInfoDTO info, string ClientId);
+        Task<AdvisorInfoDTO?> UpdateClient(AdvisorInfoDTO info);
     }
 }

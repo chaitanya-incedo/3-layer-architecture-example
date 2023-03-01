@@ -84,7 +84,7 @@ namespace Advisor.Infrastructure.Repository
             var res = _context.Users.Any(u => u.AdvisorID == newId);
             if (res == true)
             {
-                CreateAdvisorId();
+                return CreateAdvisorId();
             }
             return newId;
         }
@@ -146,10 +146,10 @@ namespace Advisor.Infrastructure.Repository
             return jwt;
         }
 
-        public AdvisorInfoDTO? UpdateClient(AdvisorInfoDTO clientInfo, string ClientId)
+        public AdvisorInfoDTO? UpdateClient(AdvisorInfoDTO clientInfo)
         {
-            var user = _context.Users.FirstOrDefault(x => x.ClientID == ClientId);
-            user.Email = clientInfo.Email;
+            var user = _context.Users.FirstOrDefault(x => x.ClientID == clientInfo.ClientID);
+            
             user.LastName = clientInfo.LastName;
             user.FirstName = clientInfo.FirstName;
             user.Address = clientInfo.Address;

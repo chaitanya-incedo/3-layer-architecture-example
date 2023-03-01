@@ -29,9 +29,9 @@ namespace Advisor.Core.Services
             return Task.FromResult(res);
         }
 
-        public Task<AdvisorInfoDTO?> UpdateClient(AdvisorInfoDTO info, string ClientId)
+        public Task<AdvisorInfoDTO?> UpdateClient(AdvisorInfoDTO info)
         {
-            var res = _repository.UpdateClient(info,ClientId);
+            var res = _repository.UpdateClient(info);
             return Task.FromResult(res); ;
         }
     }

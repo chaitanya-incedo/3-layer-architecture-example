@@ -15,7 +15,7 @@ namespace Advisor.Core.Domain.DTOs
 
         public string? Company { get; set; }
 
-        public string? Address { get; set;}
+        public string? Address { get; set; }
 
         public string? City { get; set; }
 
@@ -26,5 +26,6 @@ namespace Advisor.Core.Domain.DTOs
         public string Email { get; set; } = null!;
 
         public string? AdvisorID { get; set; }
+        public string? ClientID { get; set; }
     }
 }
