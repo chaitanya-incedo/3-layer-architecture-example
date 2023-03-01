@@ -6,7 +6,7 @@ namespace Advisor.Core.Interfaces.Repositories
 {
     public interface IAdvisorRegistrationRepository
     {
-        AdvisorRegisterDTO? CreateAdvisor(AdvisorRegisterDTO request);
+        string? CreateAdvisor(AdvisorRegisterDTO request);
         string LoginAdvisor(AdvisorLoginDTO request);
         string ChangePasswordAdv(string email);
         string ResetPasswordAdvAfterLogin(PasswordResetDTO request);
@@ -15,7 +15,7 @@ namespace Advisor.Core.Interfaces.Repositories
         AdvisorInfoDTO GetClientInfo(string id);
 
         List<AdvisorInfoDTO> GetAllAdvisors();
-        AdvisorInfoDTO UpdateAdvisor(string email, AdvisorInfoDTO info);
+        string UpdateAdvisor(string email, AdvisorInfoDTO info);
         string DeleteUser(string id);
         List<ClientInfoDto> GetAllClientsForAnAdvisor(string email);
 

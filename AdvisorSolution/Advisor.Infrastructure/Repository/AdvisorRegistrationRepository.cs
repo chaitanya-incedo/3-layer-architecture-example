@@ -24,10 +24,10 @@ namespace Advisor.Infrastructure.Repository
             _context = context;
         }
 
-        public AdvisorRegisterDTO? CreateAdvisor(AdvisorRegisterDTO request)
+        public string? CreateAdvisor(AdvisorRegisterDTO request)
         {
             if (_context.Users.Any(X => X.Email == request.Email))
-                return null;
+                return "Emali ALready Exists";
 
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
@@ -57,7 +57,7 @@ namespace Advisor.Infrastructure.Repository
 
             _context.Users.Add(advisor);
             _context.SaveChanges();
-            return request;
+            return "User Registered";
         }
 
 
@@ -244,9 +244,13 @@ namespace Advisor.Infrastructure.Repository
             return users;
         }
 
-        public AdvisorInfoDTO UpdateAdvisor(string email, AdvisorInfoDTO advisorInfo)
+        public string UpdateAdvisor(string email, AdvisorInfoDTO advisorInfo)
         {
             var user = _context.Users.FirstOrDefault(x => x.Email == email);
+            if (user == null)
+            {
+                return "No such user exists advisor";
+            }
             
             user.LastName = advisorInfo.LastName;
             user.FirstName = advisorInfo.FirstName;
@@ -259,7 +263,7 @@ namespace Advisor.Infrastructure.Repository
             user.State = advisorInfo.State;
             _context.Update(user);
             _context.SaveChanges();
-            return advisorInfo;
+            return "User Updated";
         }
 
         public string DeleteUser(string id)

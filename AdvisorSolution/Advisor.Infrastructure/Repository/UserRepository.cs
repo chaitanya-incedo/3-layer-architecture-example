@@ -23,10 +23,10 @@ namespace Advisor.Infrastructure.Repository
             _configuration = configuration;
             _context = context;
         }
-        public RegistrationDTO? CreateAdvisor(RegistrationDTO request)
+        public string? CreateAdvisor(RegistrationDTO request)
         {
             if (_context.Users.Any(X => X.Email == request.Email))
-                return null;
+                return "Email already exists";
 
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
@@ -56,7 +56,7 @@ namespace Advisor.Infrastructure.Repository
 
             _context.Users.Add(advisor);
             _context.SaveChanges();
-            return request;
+            return "user registered";
         }
                                                                             
                                                                             private string CreateClientId()
@@ -64,7 +64,7 @@ namespace Advisor.Infrastructure.Repository
                                                                                 const string chars = "A1BC2DE3FG5H6I7J4K8L9MN0OPQRSTUVWXYZ";
                                                                                 var newId = "C" + new string(Enumerable.Repeat(chars, 5)
                                                                                     .Select(s => s[random.Next(s.Length)]).ToArray());
-                                                                                var res = _context.Users.Any(u => u.AdvisorID == newId);
+                                                                                var res = _context.Users.Any(u => u.ClientID == newId);
                                                                                 if (res == true)
                                                                                 {
                                                                                     CreateClientId();
@@ -100,12 +100,15 @@ namespace Advisor.Infrastructure.Repository
                                                                                 }
                                                                             }
 
-        public RegistrationDTO? CreateClient(RegistrationDTO request, string email)
+        public string? CreateClient(RegistrationDTO request, string AdvisorID)
         {
+            if (_context.Users.Any(X => X.Email == request.Email))
+                return "Email already exists";
+
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
             var cliId = CreateClientId();
-            var res = _context.Users.FirstOrDefault(X => X.AdvisorID == email);
+            var res = _context.Users.FirstOrDefault(X => X.AdvisorID == AdvisorID);
             var advId = res.AdvisorID;
             var advuserid = res.UserID;
 
@@ -141,12 +144,14 @@ namespace Advisor.Infrastructure.Repository
             ac.ClientId = client.UserID;
             _context.AdvisorClients.Add(ac);
             _context.SaveChanges();
-            return request;
+            return "user registered";
         }
 
-        public AdvisorInfoDTO? UpdateClient(AdvisorInfoDTO clientInfo, string ClientId)
+        public string? UpdateClient(AdvisorInfoDTO clientInfo, string ClientId)
         {
             var user = _context.Users.FirstOrDefault(x => x.ClientID == ClientId);
+            if (user == null)
+                return "No such user exists inxorrect ClientID";
             user.Email = clientInfo.Email;
             user.LastName = clientInfo.LastName;
             user.FirstName = clientInfo.FirstName;
@@ -159,7 +164,7 @@ namespace Advisor.Infrastructure.Repository
             user.State = clientInfo.State;
             _context.Update(user);
             _context.SaveChanges();
-            return clientInfo;
+            return "Client Updated";
         }
     }
 }

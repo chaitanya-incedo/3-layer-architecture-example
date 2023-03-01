@@ -9,8 +9,8 @@ namespace Advisor.Core.Interfaces.Services
 {
     public interface IUserService
     {
-        Task<RegistrationDTO?> CreateClient(RegistrationDTO request, string email);
-        Task<RegistrationDTO?> CreateAdvisor(RegistrationDTO request);
-        Task<AdvisorInfoDTO?> UpdateClient(AdvisorInfoDTO info, string ClientId);
+        Task<string?> CreateClient(RegistrationDTO request, string email);
+        Task<string?> CreateAdvisor(RegistrationDTO request);
+        Task<string?> UpdateClient(AdvisorInfoDTO info, string ClientId);
     }
 }

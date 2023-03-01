@@ -16,21 +16,21 @@ namespace Advisor.Core.Services
         {
             _userRepository = userRepository;
         }
-        public Task<RegistrationDTO?> CreateAdvisor(RegistrationDTO request)
+        public Task<string?> CreateAdvisor(RegistrationDTO request)
         {
             var res = _userRepository.CreateAdvisor(request);
 
             return Task.FromResult(res);
         }
 
-        public Task<RegistrationDTO?> CreateClient(RegistrationDTO request, string email)
+        public Task<string?> CreateClient(RegistrationDTO request, string email)
         {
             var res = _userRepository.CreateClient(request, email);
 
             return Task.FromResult(res);
         }
 
-        public Task<AdvisorInfoDTO?> UpdateClient(AdvisorInfoDTO info, string ClientId)
+        public Task<string?> UpdateClient(AdvisorInfoDTO info, string ClientId)
         {
             throw new NotImplementedException();
         }

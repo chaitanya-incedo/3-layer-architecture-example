@@ -27,7 +27,7 @@ namespace Advisor.API.Controller
 
 
         [HttpPost("Registration")]
-        public async Task<ActionResult<RegistrationDTO>> Registration(RegistrationDTO request)
+        public async Task<ActionResult<string>> Registration(RegistrationDTO request)
         {
             if (request.RoleID == 2)
             {
@@ -202,7 +202,7 @@ namespace Advisor.API.Controller
        
 
         [HttpPut("Update"), Authorize(Roles = "advisor")]
-        public async Task<ActionResult<AdvisorInfoDTO>> Update(AdvisorInfoDTO info)
+        public async Task<ActionResult<string>> Update(AdvisorInfoDTO info)
         {
             if (info.AdvisorID[0] == 'A')
             {
@@ -212,7 +212,7 @@ namespace Advisor.API.Controller
                     result = _httpContext.HttpContext.User.FindFirstValue(ClaimTypes.Email);
                 }
                 Console.WriteLine(result);
-                AdvisorInfoDTO res = await _service.UpdateAdvisor(result, info);
+                var res = await _service.UpdateAdvisor(result, info);
                 if (res is null)
                     return NoContent();
                 return Ok(res);
